@@ -5,6 +5,7 @@
       <ResourceDictionary.MergedDictionaries>
         <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Button.xaml" />
         <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/RadioButton.xaml" />
+        <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Expander.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Styles.Resources>
@@ -46,7 +47,6 @@
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TextBox.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ToggleButton.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TransitioningContentControl.xaml" />
-  <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Expander.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TitleBar.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TreeView.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TreeViewItem.xaml" />
