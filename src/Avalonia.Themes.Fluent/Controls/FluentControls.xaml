@@ -4,6 +4,7 @@
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
         <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Button.xaml" />
+        <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/RadioButton.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Styles.Resources>
@@ -32,7 +33,6 @@
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/OverlayPopupHost.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/PopupRoot.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ProgressBar.xaml" />
-  <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/RadioButton.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/RepeatButton.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Separator.xaml" />
   <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Slider.xaml" />
