@@ -3,7 +3,7 @@
         x:DataType="WindowNotificationManager"
         x:CompileBindings="True">
   <Style Selector="WindowNotificationManager">
-    <Setter Property="Margin" Value="0 0"/>    
+    <Setter Property="Margin" Value="0 0"/>
     <Setter Property="Template">
       <ControlTemplate>
         <ReversibleStackPanel Name="PART_Items">

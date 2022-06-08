@@ -1,4 +1,4 @@
-<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
     <Border Margin="20" Width="200" Height="200">
       <DockPanel LastChildFill="True">
@@ -38,7 +38,7 @@
   <Style Selector="Slider:horizontal">
     <Setter Property="Background" Value="{DynamicResource SliderTrackFill}" />
     <Setter Property="BorderThickness" Value="{DynamicResource SliderBorderThemeThickness}" />
-    <Setter Property="Foreground" Value="{DynamicResource SliderTrackValueFill}" />    
+    <Setter Property="Foreground" Value="{DynamicResource SliderTrackValueFill}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -100,7 +100,7 @@
   <Style Selector="Slider:vertical">
     <Setter Property="Background" Value="{DynamicResource SliderTrackFill}" />
     <Setter Property="BorderThickness" Value="{DynamicResource SliderBorderThemeThickness}" />
-    <Setter Property="Foreground" Value="{DynamicResource SliderTrackValueFill}" />    
+    <Setter Property="Foreground" Value="{DynamicResource SliderTrackValueFill}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -171,9 +171,9 @@
     <Setter Property="Minimum" Value="{TemplateBinding Slider.Minimum}" />
     <Setter Property="Maximum" Value="{TemplateBinding Slider.Maximum}" />
   </Style>
-  
+
   <!-- Normal State -->
-  
+
   <Style Selector="Slider /template/ Thumb.SliderThumbStyle">
     <Setter Property="Background" Value="{DynamicResource SliderThumbBackground}" />
   </Style>
@@ -192,41 +192,41 @@
   <Style Selector="Slider[TickPlacement=TopLeft] /template/ TickBar#LeftTickBar, Slider[TickPlacement=Outside] /template/ TickBar#LeftTickBar">
     <Setter Property="IsVisible" Value="True" />
   </Style>
- 
+
   <Style Selector="Slider[TickPlacement=TopLeft] /template/ TickBar#TopTickBar, Slider[TickPlacement=Outside] /template/ TickBar#TopTickBar">
     <Setter Property="IsVisible" Value="True" />
   </Style>
- 
+
   <Style Selector="Slider[TickPlacement=BottomRight] /template/ TickBar#BottomTickBar, Slider[TickPlacement=Outside] /template/ TickBar#BottomTickBar">
     <Setter Property="IsVisible" Value="True" />
   </Style>
- 
+
   <Style Selector="Slider[TickPlacement=BottomRight] /template/ TickBar#RightTickBar, Slider[TickPlacement=Outside] /template/ TickBar#RightTickBar">
     <Setter Property="IsVisible" Value="True" />
   </Style>
- 
+
   <!-- Disabled State -->
 
   <Style Selector="Slider:disabled /template/ ContentPresenter#HeaderContentPresenter">
     <Setter Property="Foreground" Value="{DynamicResource SliderHeaderForegroundDisabled}" />
   </Style>
-  
+
   <Style Selector="Slider:disabled /template/ RepeatButton#PART_DecreaseButton">
     <Setter Property="Background" Value="{DynamicResource SliderTrackValueFillDisabled}" />
   </Style>
-  
+
   <Style Selector="Slider:disabled /template/ RepeatButton#PART_IncreaseButton">
     <Setter Property="Background" Value="{DynamicResource SliderTrackFillDisabled}" />
   </Style>
-  
+
   <Style Selector="Slider:disabled /template/ Thumb.SliderThumbStyle">
     <Setter Property="Background" Value="{DynamicResource SliderThumbBackgroundDisabled}" />
   </Style>
-  
+
   <Style Selector="Slider:disabled /template/ TickBar">
     <Setter Property="Fill" Value="{DynamicResource SliderTickBarFillDisabled}" />
   </Style>
-  
+
   <Style Selector="Slider:pointerover /template/ Grid#SliderContainer">
     <Setter Property="Background" Value="{DynamicResource SliderContainerBackgroundDisabled}" />
   </Style>
@@ -235,15 +235,15 @@
   <Style Selector="Slider:pointerover /template/ RepeatButton#PART_IncreaseButton">
     <Setter Property="Background" Value="{DynamicResource SliderTrackFillPointerOver}" />
   </Style>
-  
+
   <Style Selector="Slider:pointerover /template/ Thumb.SliderThumbStyle">
     <Setter Property="Background" Value="{DynamicResource SliderThumbBackgroundPointerOver}" />
   </Style>
-  
+
   <Style Selector="Slider:pointerover /template/ Grid#SliderContainer">
     <Setter Property="Background" Value="{DynamicResource SliderContainerBackgroundPointerOver}" />
   </Style>
-  
+
   <Style Selector="Slider:pointerover /template/ RepeatButton#PART_DecreaseButton">
     <Setter Property="Background" Value="{DynamicResource SliderTrackValueFillPointerOver}" />
   </Style>
@@ -256,20 +256,20 @@
   <Style Selector="Slider:pressed /template/ Thumb.SliderThumbStyle">
     <Setter Property="Background" Value="{DynamicResource SliderThumbBackgroundPressed}" />
   </Style>
-  
+
   <Style Selector="Slider:pointerover /template/ Grid#SliderContainer">
     <Setter Property="Background" Value="{DynamicResource SliderContainerBackgroundPressed}" />
   </Style>
-  
+
   <Style Selector="Slider:pointerover /template/ RepeatButton#PART_DecreaseButton">
     <Setter Property="Background" Value="{DynamicResource SliderTrackValueFillPressed}" />
   </Style>
-  
+
   <Style Selector="Slider:error /template/ Thumb.SliderThumbStyle">
     <Setter Property="Background" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
   </Style>
-  
+
   <Style Selector="Slider:error">
-      <Setter Property="Foreground" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
   </Style>
 </Styles>
