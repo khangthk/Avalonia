@@ -10,6 +10,11 @@
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/RadioButton.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Expander.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ProgressBar.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/AutoCompleteBox.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ButtonSpinner.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Calendar.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarButton.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarDatePicker.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Styles.Resources>
@@ -56,14 +61,9 @@
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/UserControl.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Window.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/EmbeddableControlRoot.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarButton.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarDayButton.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarItem.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Calendar.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarDatePicker.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ButtonSpinner.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/NumericUpDown.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/AutoCompleteBox.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/WindowNotificationManager.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/NotificationCard.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/NativeMenuBar.xaml" />

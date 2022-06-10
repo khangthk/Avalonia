@@ -4,9 +4,9 @@
 // Please see http://go.microsoft.com/fwlink/?LinkID=131993 for details.
 // All other rights reserved.
 -->
-<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentCalendarButton" TargetType="CalendarButton">
+<ResourceDictionary xmlns="https://github.com/avaloniaui" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type CalendarButton}" TargetType="CalendarButton">
       <Setter Property="ClickMode" Value="Release" />
       <Setter Property="MinWidth" Value="40" />
       <Setter Property="MinHeight" Value="40" />
@@ -85,11 +85,11 @@
       </Style>
 
       <!-- WinUI calls this OutOfFocus -->
-      <Style Selector="CalendarButton:inactive /template/ Border#Root">
+      <Style Selector="^:inactive /template/ Border#Root">
         <!-- These are probably set in code, but consistent -->
         <Setter Property="Background" Value="{DynamicResource CalendarViewOutOfScopeBackground}"/>
       </Style>
-      <Style Selector="CalendarButton:inactive /template/ ContentControl#Content">
+      <Style Selector="^:inactive /template/ ContentControl#Content">
         <Setter Property="Foreground" Value="{DynamicResource CalendarViewOutOfScopeForeground}"/>
       </Style>
 
@@ -97,13 +97,8 @@
         <Setter Property="Foreground" Value="{DynamicResource CalendarViewBlackoutForeground}" />
       </Style>
 
-      <Style Selector="CalendarDayButton:disabled /template/ ContentControl#Content">
+      <Style Selector="^:disabled /template/ ContentControl#Content">
         <Setter Property="Foreground" Value="{DynamicResource CalendarViewWeekDayForegroundDisabled}" />
       </Style>
     </ControlTheme>
-  </Styles.Resources>
-  
-  <Style Selector="CalendarButton">
-    <Setter Property="Theme" Value="{StaticResource FluentCalendarButton}" />
-  </Style>
-</Styles>
+</ResourceDictionary>

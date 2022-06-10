@@ -1,18 +1,17 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:sys="clr-namespace:System;assembly=netstandard"
-        x:CompileBindings="True">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=netstandard"
+                    x:CompileBindings="True">
+  <!--<Design.PreviewWith>
     <Border Margin="20, 20, 20, 200">
       <CalendarDatePicker Width="200" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
     </Border>
-  </Design.PreviewWith>
+  </Design.PreviewWith>-->
   
-  <Styles.Resources>
     <x:Double x:Key="CalendarDatePickerCurrentDayFontSize">12</x:Double>
     <x:Double x:Key="CalendarDatePickerMinHeight">32</x:Double>
 
-    <ControlTheme x:Key="FluentCalendarDatePickerButton" TargetType="Button">
+    <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
       <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerCalendarGlyphForeground}" />
       <Setter Property="Margin" Value="2,0,4,0" />
       <Setter Property="Width" Value="20" />
@@ -168,9 +167,5 @@
         <Setter Property="BorderBrush" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
       </Style>
     </ControlTheme>
-  </Styles.Resources>
   
-  <Style Selector="CalendarDatePicker">
-    <Setter Property="Theme" Value="{StaticResource FluentCalendarDatePicker}" />
-  </Style>
-</Styles>
+</ResourceDictionary>

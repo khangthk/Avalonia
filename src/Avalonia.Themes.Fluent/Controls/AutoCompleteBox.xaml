@@ -1,7 +1,6 @@
-﻿<Style xmlns="https://github.com/avaloniaui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       Selector="AutoCompleteBox">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--<Design.PreviewWith>
     <Border Padding="20">
       <AutoCompleteBox Width="200">
         <AutoCompleteBox.Items>
@@ -16,10 +15,9 @@
         </AutoCompleteBox.Items>
       </AutoCompleteBox>
     </Border>
-  </Design.PreviewWith>
+  </Design.PreviewWith>-->
   
-  <Style.Resources>
-    <ControlTheme x:Key="FluentAutoCompleteBox" TargetType="AutoCompleteBox">
+    <ControlTheme x:Key="{x:Type AutoCompleteBox}" TargetType="AutoCompleteBox">
       <Setter Property="VerticalAlignment" Value="Top" />
       <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
       <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
@@ -48,7 +46,8 @@
                      DataValidationErrors.Errors="{TemplateBinding (DataValidationErrors.Errors)}" />
             <Popup Name="PART_Popup" 
                    WindowManagerAddShadowHint="False"
-                   MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}" MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                   MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}" 
+                   MaxHeight="{TemplateBinding MaxDropDownHeight}"
                    IsLightDismissEnabled="True"
                    PlacementTarget="{TemplateBinding}">
               <Border Name="PART_SuggestionsContainer"
@@ -68,7 +67,5 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Style.Resources>
   
-  <Setter Property="Theme" Value="{StaticResource FluentAutoCompleteBox}" />
-</Style>
+</ResourceDictionary>
