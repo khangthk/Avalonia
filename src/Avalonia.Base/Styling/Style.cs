@@ -40,10 +40,7 @@ namespace Avalonia.Styling
                     (target == host ?
                         SelectorMatch.AlwaysThisInstance :
                         SelectorMatch.NeverThisInstance);
-#if DEBUG
-                if (match.IsMatch && match.Activator is null && ToString() != "Style: :is(Control)")
-                    System.Diagnostics.Debug.WriteLine($"WARN: can {this} be moved to the control theme?");
-#endif
+
                 if (match.IsMatch)
                     Attach(target, match.Activator);
 
