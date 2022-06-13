@@ -1,7 +1,6 @@
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentCarousel" TargetType="Carousel">
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type Carousel}" TargetType="Carousel">
       <Setter Property="Template">
         <ControlTemplate>
           <Border Background="{TemplateBinding Background}"
@@ -18,9 +17,4 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Styles.Resources>
-
-  <Style Selector="Carousel">
-    <Setter Property="Theme" Value="{StaticResource FluentCarousel}" />
-  </Style>
-</Styles>
+</ResourceDictionary>

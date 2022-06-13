@@ -17,6 +17,8 @@
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarDatePicker.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarDayButton.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarItem.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CaptionButtons.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Carousel.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Styles.Resources>
@@ -27,8 +29,6 @@
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/PathIcon.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DataValidationErrors.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/FocusAdorner.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/CaptionButtons.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Carousel.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/CheckBox.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBox.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBoxItem.xaml" />
