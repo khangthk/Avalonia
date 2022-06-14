@@ -11,7 +11,7 @@
     <x:Double x:Key="CalendarDatePickerCurrentDayFontSize">12</x:Double>
     <x:Double x:Key="CalendarDatePickerMinHeight">32</x:Double>
 
-    <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
+    <ControlTheme x:Key="FluentCalendarDatePickerButton" TargetType="Button">
       <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerCalendarGlyphForeground}" />
       <Setter Property="Margin" Value="2,0,4,0" />
       <Setter Property="Width" Value="20" />
