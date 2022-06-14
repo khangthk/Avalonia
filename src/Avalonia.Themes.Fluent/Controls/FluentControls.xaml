@@ -19,6 +19,10 @@
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CalendarItem.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CaptionButtons.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Carousel.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/CheckBox.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/FlyoutPresenter.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/GridSplitter.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ItemsControl.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Styles.Resources>
@@ -29,14 +33,11 @@
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/PathIcon.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DataValidationErrors.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/FocusAdorner.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/CheckBox.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBox.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBoxItem.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ContentControl.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DropDownButton.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Label.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/GridSplitter.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ItemsControl.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ListBox.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ListBoxItem.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Menu.xaml" />
@@ -72,7 +73,6 @@
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/SplitView.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DatePicker.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TimePicker.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/FlyoutPresenter.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/MenuFlyoutPresenter.xaml" />
     <!--  ManagedFileChooser comes last because it uses (and overrides) styles for a multitude of other controls...the dialogs were originally UserControls, after all  -->
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ManagedFileChooser.xaml" />
