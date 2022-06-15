@@ -1,6 +1,5 @@
-﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentMenuFlyoutPresenter" TargetType="MenuFlyoutPresenter">
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type MenuFlyoutPresenter}" TargetType="MenuFlyoutPresenter">
       <Setter Property="Background" Value="{DynamicResource MenuFlyoutPresenterBackground}" />
       <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}" />
       <Setter Property="BorderThickness" Value="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}" />
@@ -20,9 +19,9 @@
                   CornerRadius="{TemplateBinding CornerRadius}">
             <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                           VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-              <ItemsPresenter Name="PART_ItemsPresenter" 
-                              Items="{TemplateBinding Items}" 
-                              ItemsPanel="{TemplateBinding ItemsPanel}" 
+              <ItemsPresenter Name="PART_ItemsPresenter"
+                              Items="{TemplateBinding Items}"
+                              ItemsPanel="{TemplateBinding ItemsPanel}"
                               ItemTemplate="{TemplateBinding ItemTemplate}"
                               Margin="{DynamicResource MenuFlyoutScrollerMargin}"
                               KeyboardNavigation.TabNavigation="Continue"
@@ -32,9 +31,4 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Styles.Resources>
-  
-  <Style Selector="MenuFlyoutPresenter">
-    <Setter Property="Theme" Value="{StaticResource FluentMenuFlyoutPresenter}" />
-  </Style>
-</Styles>
+</ResourceDictionary>

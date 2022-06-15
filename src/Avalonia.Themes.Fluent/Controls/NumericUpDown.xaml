@@ -1,6 +1,6 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--<Design.PreviewWith>
     <Border Padding="20">
       <StackPanel Spacing="20">
         <NumericUpDown Minimum="0"
@@ -18,10 +18,9 @@
                        Watermark="Enter text" />
       </StackPanel>
     </Border>
-  </Design.PreviewWith>
+  </Design.PreviewWith>-->
   
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentNumericUpDown" TargetType="NumericUpDown">
+    <ControlTheme x:Key="{x:Type NumericUpDown}" TargetType="NumericUpDown">
       <Setter Property="Foreground" Value="{DynamicResource TextControlForeground}" />
       <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
       <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
@@ -65,9 +64,4 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Styles.Resources>
-  
-  <Style Selector="NumericUpDown">
-    <Setter Property="Theme" Value="{StaticResource FluentNumericUpDown}" />
-  </Style>
-</Styles>
+</ResourceDictionary>
