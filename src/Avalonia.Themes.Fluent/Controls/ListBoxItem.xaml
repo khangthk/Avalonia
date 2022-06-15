@@ -1,6 +1,6 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--<Design.PreviewWith>
     <Border Padding="0">
       <ListBox>
         <ListBoxItem IsEnabled="False">Disabled</ListBoxItem>
@@ -11,10 +11,9 @@
         <ListBoxItem>Test</ListBoxItem>
       </ListBox>
     </Border>
-  </Design.PreviewWith>
-  <Styles.Resources>
+  </Design.PreviewWith>-->
     <Thickness x:Key="ListBoxItemPadding">12,9,12,12</Thickness>
-    <ControlTheme x:Key="FluentListBoxItem" TargetType="ListBoxItem">
+    <ControlTheme x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Padding" Value="{DynamicResource ListBoxItemPadding}" />
       <Setter Property="Template">
@@ -26,16 +25,13 @@
                             CornerRadius="{TemplateBinding CornerRadius}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             Content="{TemplateBinding Content}"
+                            FontWeight="Normal"
+                            FontSize="{DynamicResource ControlContentThemeFontSize}"
                             Padding="{TemplateBinding Padding}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
         </ControlTemplate>
       </Setter>
-
-      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
-      </Style>
 
       <Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
         <Setter Property="Foreground" Value="{DynamicResource SystemControlDisabledBaseMediumLowBrush}" />
@@ -80,9 +76,4 @@
         </Style>
       </Style>
     </ControlTheme>
-  </Styles.Resources>
-
-  <Style Selector="ListBoxItem">
-    <Setter Property="Theme" Value="{StaticResource FluentListBoxItem}"/>
-  </Style>
-</Styles>
+</ResourceDictionary>

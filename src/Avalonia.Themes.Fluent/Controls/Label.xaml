@@ -1,9 +1,7 @@
-<Style xmlns="https://github.com/avaloniaui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       Selector="Label">
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <Style.Resources>
-    <ControlTheme x:Key="FluentLabel" TargetType="Label">
+    <ControlTheme x:Key="{x:Type Label}" TargetType="Label">
       <Setter Property="Padding" Value="3"/>
       <Setter Property="Template">
         <ControlTemplate>
@@ -21,7 +19,4 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Style.Resources>
-
-  <Setter Property="Theme" Value="{StaticResource FluentLabel}" />
-</Style>
+</ResourceDictionary>

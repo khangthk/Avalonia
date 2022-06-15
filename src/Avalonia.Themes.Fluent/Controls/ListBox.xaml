@@ -1,6 +1,6 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--<Design.PreviewWith>
     <Border Padding="20">
       <ListBox>
         <ListBoxItem>Test</ListBoxItem>
@@ -9,9 +9,8 @@
         <ListBoxItem>Test</ListBoxItem>
       </ListBox>
     </Border>
-  </Design.PreviewWith>
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentListBox" TargetType="ListBox">
+  </Design.PreviewWith>-->
+    <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox">
       <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
       <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}" />
       <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
@@ -44,9 +43,4 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Styles.Resources>
-  
-  <Style Selector="ListBox">
-    <Setter Property="Theme" Value="{StaticResource FluentListBox}" />
-  </Style>
-</Styles>
+</ResourceDictionary>
