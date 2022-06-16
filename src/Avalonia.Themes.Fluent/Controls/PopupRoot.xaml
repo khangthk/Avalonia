@@ -1,8 +1,6 @@
-﻿<Style xmlns="https://github.com/avaloniaui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       Selector="PopupRoot">
-  <Style.Resources>
-    <ControlTheme x:Key="FluentPopupRoot" TargetType="PopupRoot">
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type PopupRoot}" TargetType="PopupRoot">
       <Setter Property="Background" Value="{x:Null}" />
       <Setter Property="TransparencyLevelHint" Value="Transparent" />
       <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
@@ -16,10 +14,10 @@
             <Panel>
               <Border Name="PART_TransparencyFallback" IsHitTestVisible="False" />
               <VisualLayerManager IsPopup="True">
-                <ContentPresenter Name="PART_ContentPresenter" 
+                <ContentPresenter Name="PART_ContentPresenter"
                                   Background="{TemplateBinding Background}"
                                   ContentTemplate="{TemplateBinding ContentTemplate}"
-                                  Content="{TemplateBinding Content}" 
+                                  Content="{TemplateBinding Content}"
                                   Padding="{TemplateBinding Padding}" />
               </VisualLayerManager>
             </Panel>
@@ -27,7 +25,4 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Style.Resources>
-
-  <Setter Property="Theme" Value="{StaticResource FluentPopupRoot}" />
-</Style>
+</ResourceDictionary>

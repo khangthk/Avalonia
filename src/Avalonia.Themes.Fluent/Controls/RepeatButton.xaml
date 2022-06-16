@@ -1,17 +1,15 @@
-﻿<Style xmlns="https://github.com/avaloniaui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       Selector="RepeatButton">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--<Design.PreviewWith>
     <Border Padding="20">
       <StackPanel Spacing="20">
         <RepeatButton Content="Click Me!" />
       </StackPanel>
     </Border>
-  </Design.PreviewWith>
-  <Style.Resources>
+  </Design.PreviewWith>-->
     <Thickness x:Key="ButtonPadding">8,5,8,6</Thickness>
-    
-    <ControlTheme x:Key="FluentRepeatButton" TargetType="RepeatButton">
+
+    <ControlTheme x:Key="{x:Type RepeatButton}" TargetType="RepeatButton">
       <Setter Property="Background" Value="{DynamicResource RepeatButtonBackground}" />
       <Setter Property="Foreground" Value="{DynamicResource RepeatButtonForeground}" />
       <Setter Property="BorderBrush" Value="{DynamicResource RepeatButtonBorderBrush}" />
@@ -63,7 +61,4 @@
         <Setter Property="RenderTransform" Value="scale(0.98)" />
       </Style>
     </ControlTheme>
-  </Style.Resources>
-
-  <Setter Property="Theme" Value="{StaticResource FluentRepeatButton}" />
-</Style>
+</ResourceDictionary>

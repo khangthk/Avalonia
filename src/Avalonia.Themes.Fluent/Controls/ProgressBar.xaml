@@ -31,14 +31,24 @@
                     ClipToBounds="True"
                     CornerRadius="{TemplateBinding CornerRadius}">
                     <Panel>
-                        <Panel x:Name="DeterminateRoot">
+                        <Panel x:Name="DeterminateRoot" Opacity="1">
+                          <Panel.Transitions>
+                            <Transitions>
+                              <DoubleTransition Property="Opacity" Duration="0:0:0.197" />
+                            </Transitions>
+                          </Panel.Transitions>
                             <Border
                                 x:Name="PART_Indicator"
                                 Margin="{TemplateBinding Padding}"
                                 Background="{TemplateBinding Foreground}"
                                 CornerRadius="{TemplateBinding CornerRadius}" />
                         </Panel>
-                        <Panel x:Name="IndeterminateRoot">
+                        <Panel x:Name="IndeterminateRoot" Opacity="0">
+                          <Panel.Transitions>
+                            <Transitions>
+                              <DoubleTransition Property="Opacity" Duration="0:0:0.197" />
+                            </Transitions>
+                          </Panel.Transitions>
                             <Border
                                 x:Name="IndeterminateProgressBarIndicator"
                                 Margin="{TemplateBinding Padding}"
@@ -85,27 +95,6 @@
                     <RotateTransform Angle="90" />
                 </Setter.Value>
             </Setter>
-        </Style>
-        <!--  FadeInAnimation mockup  -->
-        <Style Selector="^ /template/ Panel#DeterminateRoot">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.197" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="^ /template/ Panel#IndeterminateRoot">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.197" />
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="^ /template/ Panel#DeterminateRoot">
-            <Setter Property="Opacity" Value="1" />
-        </Style>
-        <Style Selector="^ /template/ Panel#IndeterminateRoot">
-            <Setter Property="Opacity" Value="0" />
         </Style>
         <Style Selector="^:indeterminate /template/ Panel#DeterminateRoot">
             <Setter Property="Opacity" Value="0" />

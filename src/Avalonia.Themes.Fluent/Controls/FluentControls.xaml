@@ -30,14 +30,16 @@
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/NativeMenuBar.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/NotificationCard.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/NumericUpDown.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/OverlayPopupHost.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/PopupRoot.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/PathIcon.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/RepeatButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Styles.Resources>
 
     <!--  Define ToolTip first so its styles can be overriden by other controls (e.g. TextBox)  -->
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ToolTip.xaml" />
-    <!--  PathIcon also needs to be defined early so it can be overriden by other styles (e.g. ComboBox)  -->
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/PathIcon.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DataValidationErrors.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/FocusAdorner.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBox.xaml" />
@@ -46,9 +48,6 @@
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DropDownButton.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ContextMenu.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/MenuItem.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/OverlayPopupHost.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/PopupRoot.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/RepeatButton.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Separator.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Slider.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ScrollBar.xaml" />
