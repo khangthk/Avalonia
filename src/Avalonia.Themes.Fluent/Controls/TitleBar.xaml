@@ -1,14 +1,12 @@
-﻿<Style xmlns="https://github.com/avaloniaui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       Selector="TitleBar">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--<Design.PreviewWith>
     <Border>
       <TitleBar Background="SkyBlue" Height="30" Width="300" Foreground="Black" />
     </Border>
-  </Design.PreviewWith>
-  
-  <Style.Resources>
-    <ControlTheme x:Key="FluentTitleBar" TargetType="TitleBar">
+  </Design.PreviewWith>-->
+
+    <ControlTheme x:Key="{x:Type TitleBar}" TargetType="TitleBar">
       <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
       <Setter Property="VerticalAlignment" Value="Top" />
       <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -54,7 +52,4 @@
         <Setter Property="RenderTransform" Value="none" />
       </Style>
     </ControlTheme>
-  </Style.Resources>
-
-  <Setter Property="Theme" Value="{StaticResource FluentTitleBar}" />
-</Style>
+</ResourceDictionary>

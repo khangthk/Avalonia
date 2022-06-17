@@ -1,6 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
-  <Design.PreviewWith>
+﻿<ResourceDictionary 
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls">
+  <!--<Design.PreviewWith>
     <Grid ColumnDefinitions="*,20,*" Height="300" Width="200" Margin="20">
       <ScrollViewer>
         <Border Height="1000" Background="#ccc" />
@@ -9,9 +11,8 @@
         <Border Height="1000" Background="#ccc" />
       </ScrollViewer>
     </Grid>
-  </Design.PreviewWith>
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentScrollViewer" TargetType="ScrollViewer">
+  </Design.PreviewWith>-->
+    <ControlTheme x:Key="{x:Type ScrollViewer}" TargetType="ScrollViewer">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Template">
         <ControlTemplate>
@@ -73,17 +74,13 @@
           </ControlTemplate>
         </Setter>
         <Style Selector="^ /template/ RepeatButton">
-          <Style Selector="^ &gt; Viewbox &gt; Path">
+          <Style Selector="^ > Viewbox > Path">
             <Setter Property="Fill" Value="{DynamicResource ScrollBarButtonArrowForeground}" />
           </Style>
-          <Style Selector="^:pointerover &gt; Viewbox &gt; Path">
+          <Style Selector="^:pointerover > Viewbox > Path">
             <Setter Property="Fill" Value="{DynamicResource ScrollBarButtonArrowForegroundPointerOver}" />
           </Style>
         </Style>
       </Style>
     </ControlTheme>
-  </Styles.Resources>
-  <Style Selector="ScrollViewer">
-    <Setter Property="Theme" Value="{StaticResource FluentScrollViewer}" />
-  </Style>
-</Styles>
+</ResourceDictionary>

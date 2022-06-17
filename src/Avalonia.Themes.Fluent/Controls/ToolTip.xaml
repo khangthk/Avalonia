@@ -1,13 +1,12 @@
-﻿<Style xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:sys="clr-namespace:System;assembly=netstandard"
-        x:CompileBindings="True"
-        Selector="ToolTip">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=netstandard"
+                    x:CompileBindings="True">
+  <!--<Design.PreviewWith>
     <Grid RowDefinitions="Auto,Auto"
           ColumnDefinitions="Auto,Auto"
           HorizontalAlignment="Center">
-      <Border Grid.Column="0" 
+      <Border Grid.Column="0"
               Grid.Row="1"
               Background="{DynamicResource SystemControlBackgroundAccentBrush}"
               Margin="5" Padding="50" ToolTip.Tip="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.">
@@ -18,10 +17,10 @@
                 Grid.Row="0"
                 IsChecked="{Binding ElementName=Border, Path=(ToolTip.IsOpen)}"
                 Content="ToolTip Open" />
-      <Border Name="Border" 
+      <Border Name="Border"
               Grid.Column="1"
               Grid.Row="1"
-              Background="{DynamicResource SystemControlBackgroundAccentBrush}" 
+              Background="{DynamicResource SystemControlBackgroundAccentBrush}"
               Margin="5"
               Padding="50"
               ToolTip.Placement="Bottom">
@@ -34,12 +33,11 @@
         <TextBlock>ToolTip bottom placement</TextBlock>
       </Border>
     </Grid>
-  </Design.PreviewWith>
-  
-  <Style.Resources>
+  </Design.PreviewWith>-->
+
     <sys:Double x:Key="ToolTipContentMaxWidth">320</sys:Double>
-    
-    <ControlTheme x:Key="FluentToolTip" TargetType="ToolTip">
+
+    <ControlTheme x:Key="{x:Type ToolTip}" TargetType="ToolTip">
       <Setter Property="Foreground" Value="{DynamicResource ToolTipForeground}" />
       <Setter Property="Background" Value="{DynamicResource ToolTipBackground}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ToolTipBorderBrush}" />
@@ -61,7 +59,7 @@
           </Border>
         </ControlTemplate>
       </Setter>
-      
+
       <Style Selector="^ > TextBlock">
         <Setter Property="TextWrapping" Value="Wrap" />
       </Style>
@@ -70,7 +68,4 @@
         <Setter Property="Opacity" Value="1" />
       </Style>
     </ControlTheme>
-  </Style.Resources>
-
-  <Setter Property="Theme" Value="{StaticResource FluentToolTip}" />
-</Style>
+</ResourceDictionary>
