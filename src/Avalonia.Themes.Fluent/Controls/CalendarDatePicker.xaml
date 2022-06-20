@@ -60,7 +60,7 @@
       </Setter>
     </ControlTheme>
     
-    <ControlTheme x:Key="FluentCalendarDatePicker" TargetType="CalendarDatePicker">
+    <ControlTheme x:Key="{x:Type CalendarDatePicker}" TargetType="CalendarDatePicker">
       <Setter Property="Background" Value="{DynamicResource CalendarDatePickerBackground}" />
       <Setter Property="Foreground" Value="{DynamicResource CalendarDatePickerForeground}" />
       <Setter Property="BorderBrush" Value="{DynamicResource CalendarDatePickerBorderBrush}" />
