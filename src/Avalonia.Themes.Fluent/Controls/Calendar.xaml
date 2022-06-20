@@ -37,9 +37,5 @@
                 </StackPanel>
             </ControlTemplate>
         </Setter>
-      <!-- BackgroundLayer shouldn't show in the week day names row-->
-      <Style Selector="Calendar[DisplayMode=Month] CalendarItem /template/ Border#BackgroundLayer">
-        <Setter Property="Margin" Value="0,38,0,0" />
-      </Style>
     </ControlTheme>
 </ResourceDictionary>

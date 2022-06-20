@@ -61,21 +61,24 @@
         <Style Selector="^ /template/ Border#Border">
           <Setter Property="BorderBrush" Value="{DynamicResource CalendarViewSelectedBorderBrush}" />
         </Style>
-
-        <Style Selector="^:pointerover /template/ Border#Root">
-          <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
-        </Style>
         
-        <Style Selector="^:pointerover /template/ Border#Border">
-          <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
+        <Style Selector="^:pointerover /template/">
+          <Style Selector="^Border#Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
+          </Style>
+          <Style Selector="^Border#Root">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+          </Style>
         </Style>
 
-        <Style Selector="^:pressed /template/ Border#Root">
-          <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
-        </Style>
-
-        <Style Selector="^:pressed /template/ Border#Border">
-          <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark2}" />
+        <Style Selector="^:pressed /template/">
+          <Style Selector="^Border#Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark2}" />
+          </Style>
+          
+          <Style Selector="^Border#Root">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+          </Style>
         </Style>
 
         <Style Selector="^ /template/ ContentControl#Content">
@@ -85,12 +88,14 @@
       </Style>
 
       <!-- WinUI calls this OutOfFocus -->
-      <Style Selector="^:inactive /template/ Border#Root">
-        <!-- These are probably set in code, but consistent -->
-        <Setter Property="Background" Value="{DynamicResource CalendarViewOutOfScopeBackground}"/>
-      </Style>
-      <Style Selector="^:inactive /template/ ContentControl#Content">
-        <Setter Property="Foreground" Value="{DynamicResource CalendarViewOutOfScopeForeground}"/>
+      <Style Selector="^:inactive /template/">
+        <Style Selector="^Border#Root">
+          <!-- These are probably set in code, but consistent -->
+          <Setter Property="Background" Value="{DynamicResource CalendarViewOutOfScopeBackground}"/>
+        </Style>
+        <Style Selector="^ContentControl#Content">
+          <Setter Property="Foreground" Value="{DynamicResource CalendarViewOutOfScopeForeground}"/>
+        </Style>
       </Style>
 
       <Style Selector="^:blackout /template/ ContentControl#Content">

@@ -101,7 +101,8 @@
                   <Path StrokeThickness="1.5" Data="M 0,0 L 9,9 L 18,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Button>
               </Grid>
-              <Border Name="BackgroundLayer" Background="{TemplateBinding BorderBrush}" Grid.Row="1" />
+              <!--Border below is used only for MonthView but it can't be moved inside of Grid because CalendarItem expects it to be empty and it will cause side-effects-->
+              <Border Name="BackgroundLayer" Background="{TemplateBinding BorderBrush}" Margin="0,38,0,0" IsVisible="{ReflectionBinding #MonthView.IsVisible}" Grid.Row="1" />
               <Grid Name="MonthView" Grid.Row="1" IsVisible="False" MinHeight="290">
                 <Grid.RowDefinitions>
                   <!--This should always be the week day names??-->
@@ -123,8 +124,11 @@
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
               </Grid>
-              <Grid Name="YearView" MinHeight="290"
-                    Grid.Row="1" IsVisible="False">
+              <Grid Name="YearView"
+                    Background="{TemplateBinding BorderBrush}"
+                    MinHeight="290"
+                    Grid.Row="1"
+                    IsVisible="False">
                 <Grid.RowDefinitions>
                   <RowDefinition Height="*" />
                   <RowDefinition Height="*" />
