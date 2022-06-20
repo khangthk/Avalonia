@@ -1,8 +1,6 @@
-﻿<Style xmlns="https://github.com/avaloniaui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-       Selector="TransitioningContentControl">
-  <Style.Resources>
-    <ControlTheme x:Key="FluentTransitioningContentControl" TargetType="TransitioningContentControl">
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type TransitioningContentControl}" TargetType="TransitioningContentControl">
       <Setter Property="Template">
         <ControlTemplate>
           <ContentPresenter Name="PART_ContentPresenter"
@@ -18,7 +16,4 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Style.Resources>
-
-  <Setter Property="Theme" Value="{StaticResource FluentTransitioningContentControl}" />
-</Style>
+</ResourceDictionary>

@@ -44,6 +44,10 @@
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ToggleSwitch.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ToolTip.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/TitleBar.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/TransitioningContentControl.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/TreeView.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/WindowNotificationManager.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Window.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Styles.Resources>
@@ -61,16 +65,12 @@
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ScrollBar.xaml" />
     <!--  TabControl needs to come after TabStrip as it redefines the inner TabStrip.ItemsPanel  -->
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TextBox.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TransitioningContentControl.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TreeView.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TreeViewItem.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/UserControl.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Window.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/EmbeddableControlRoot.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/WindowNotificationManager.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/SplitButton.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/SplitView.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DatePicker.xaml" />
+    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/UserControl.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/TimePicker.xaml" />
     <!--  ManagedFileChooser comes last because it uses (and overrides) styles for a multitude of other controls...the dialogs were originally UserControls, after all  -->
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ManagedFileChooser.xaml" />
