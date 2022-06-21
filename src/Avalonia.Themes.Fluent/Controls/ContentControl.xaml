@@ -1,7 +1,6 @@
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentContentControl" TargetType="ContentControl">
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type ContentControl}" TargetType="ContentControl">
       <Setter Property="Template">
         <ControlTemplate>
           <ContentPresenter Name="PART_ContentPresenter"
@@ -17,9 +16,4 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Styles.Resources>
-
-  <Style Selector="ContentControl">
-    <Setter Property="Theme" Value="{StaticResource FluentContentControl}" />
-  </Style>
-</Styles>
+</ResourceDictionary>

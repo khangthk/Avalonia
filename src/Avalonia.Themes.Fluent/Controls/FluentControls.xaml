@@ -48,6 +48,10 @@
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/TreeView.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/WindowNotificationManager.xaml" />
                 <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/Window.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBox.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBoxItem.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ContentControl.xaml" />
+                <ResourceInclude Source="avares://Avalonia.Themes.Fluent/Controls/ContextMenu.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Styles.Resources>
@@ -55,11 +59,7 @@
     <!--  Define ToolTip first so its styles can be overriden by other controls (e.g. TextBox)  -->
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DataValidationErrors.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/FocusAdorner.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBox.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ComboBoxItem.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ContentControl.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/DropDownButton.xaml" />
-    <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ContextMenu.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/MenuItem.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/Slider.xaml" />
     <StyleInclude Source="avares://Avalonia.Themes.Fluent/Controls/ScrollBar.xaml" />

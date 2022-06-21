@@ -1,6 +1,6 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--<Design.PreviewWith>
     <Border Padding="20">
       <Border Background="{DynamicResource ComboBoxDropDownBackground}" BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}" BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}" Margin="0,-1,0,-1" Padding="{DynamicResource ComboBoxDropdownBorderPadding}" CornerRadius="{DynamicResource OverlayCornerRadius}">
         <StackPanel HorizontalAlignment="Stretch">
@@ -11,10 +11,9 @@
         </StackPanel>
       </Border>
     </Border>
-  </Design.PreviewWith>
+  </Design.PreviewWith>-->
   
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentComboBoxItem" TargetType="ComboBoxItem">
+    <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="ComboBoxItem">
       <Setter Property="Foreground" Value="{DynamicResource ComboBoxItemForeground}" />
       <Setter Property="Background" Value="{DynamicResource ComboBoxItemBackground}" />
       <Setter Property="Padding" Value="{DynamicResource ComboBoxItemThemePadding}" />
@@ -83,9 +82,4 @@
         </Style>
       </Style>
     </ControlTheme>
-  </Styles.Resources>
-  
-  <Style Selector="ComboBoxItem">
-    <Setter Property="Theme" Value="{StaticResource FluentComboBoxItem}" />
-  </Style>
-</Styles>
+</ResourceDictionary>

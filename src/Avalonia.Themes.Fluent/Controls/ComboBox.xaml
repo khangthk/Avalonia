@@ -1,6 +1,6 @@
-﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Design.PreviewWith>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!--<Design.PreviewWith>
     <Border Padding="20">
       <StackPanel Spacing="10">
         <ComboBox PlaceholderText="Select an item">
@@ -16,8 +16,7 @@
         </ComboBox>
       </StackPanel>
     </Border>
-  </Design.PreviewWith>
-  <Styles.Resources>
+  </Design.PreviewWith>-->
     <Thickness x:Key="ComboBoxTopHeaderMargin">0,0,0,4</Thickness>
     <x:Int32 x:Key="ComboBoxPopupMaxNumberOfItems">15</x:Int32>
     <x:Int32 x:Key="ComboBoxPopupMaxNumberOfItemsThatCanBeShownOnOneSide">7</x:Int32>
@@ -26,7 +25,7 @@
     <Thickness x:Key="ComboBoxEditableTextPadding">11,5,32,6</Thickness>
     <x:Double x:Key="ComboBoxMinHeight">32</x:Double>
     
-    <ControlTheme x:Key="FluentComboBox" TargetType="ComboBox">
+    <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
       <Setter Property="Padding" Value="{DynamicResource ComboBoxPadding}" />
       <Setter Property="FocusAdorner" Value="{x:Null}" />
       <Setter Property="MaxDropDownHeight" Value="504" />
@@ -224,9 +223,5 @@
         </Style>
       </Style>
     </ControlTheme>
-  </Styles.Resources>
   
-  <Style Selector="ComboBox">
-    <Setter Property="Theme" Value="{StaticResource FluentComboBox}" />
-  </Style>
-</Styles>
+</ResourceDictionary>
