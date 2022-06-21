@@ -42,15 +42,6 @@
       <Style Selector="^:disabled /template/ ContentPresenter">
         <Setter Property="Foreground" Value="{DynamicResource CalendarViewWeekDayForegroundDisabled}" />
       </Style>
-      <Style Selector="^ > Path">
-        <Setter Property="Stroke" Value="{DynamicResource CalendarViewForeground}" />
-      </Style>
-      <Style Selector="^:pointerover > Path">
-        <Setter Property="Stroke" Value="{DynamicResource CalendarViewNavigationButtonForegroundPointerOver}" />
-      </Style>
-      <Style Selector="^:pressed > Path">
-        <Setter Property="Stroke" Value="{DynamicResource CalendarViewNavigationButtonForegroundPressed}" />
-      </Style>
     </ControlTheme>
 
     <ControlTheme x:Key="{x:Type CalendarItem}" TargetType="CalendarItem">
@@ -145,5 +136,14 @@
           </Border>
         </ControlTemplate>
       </Setter>
+      <Style Selector="^ /template/ Button > Path">
+        <Setter Property="Stroke" Value="{DynamicResource CalendarViewForeground}" />
+      </Style>
+      <Style Selector="^ /template/ Button:pointerover > Path">
+        <Setter Property="Stroke" Value="{DynamicResource CalendarViewNavigationButtonForegroundPointerOver}" />
+      </Style>
+      <Style Selector="^ /template/ Button:pressed > Path">
+        <Setter Property="Stroke" Value="{DynamicResource CalendarViewNavigationButtonForegroundPressed}" />
+      </Style>
     </ControlTheme>
 </ResourceDictionary>

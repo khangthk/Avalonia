@@ -98,7 +98,26 @@
                          VerticalAlignment="Stretch"
                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                         Grid.Column="0" />
+                         Grid.Column="0">
+                  <TextBox.Styles>
+                    <Style Selector="TextBox#PART_TextBox:focus /template/ Border#PART_BorderElement">
+                      <!-- By default the TextBox has its own focused state, override this to disable it here -->
+                      <Setter Property="Background" Value="Transparent"/>
+                      <Setter Property="BorderBrush" Value="Transparent"/>
+                      <Setter Property="BorderThickness" Value="0" />
+                    </Style>
+                    <Style Selector="TextBox#PART_TextBox:disabled /template/">
+                      <Style Selector="^ Border#PART_BorderElement">
+                        <!-- By default the TextBox has its own disabled state, override this to make the border background show through -->
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                      </Style>
+                      <Style Selector="^ TextBlock#PART_Watermark, ^ TextBlock#PART_FloatingWatermark">
+                        <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerTextForegroundDisabled}" />
+                      </Style>
+                    </Style>
+                  </TextBox.Styles>
+                </TextBox>
                 <Button Name="PART_Button" 
                         Theme="{StaticResource FluentCalendarDatePickerButton}"
                         Grid.Column="1"
@@ -143,16 +162,6 @@
           <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerCalendarGlyphForegroundDisabled}" />
         </Style>
 
-        <Style Selector="^ TextBox#PART_TextBox:disabled /template/">
-          <Style Selector="^ Border#PART_BorderElement">
-            <!-- By default the TextBox has its own disabled state, override this to make the border background show through -->
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-          </Style>
-          <Style Selector="^ TextBlock#PART_Watermark, ^ TextBlock#PART_FloatingWatermark">
-            <Setter Property="TextElement.Foreground" Value="{DynamicResource CalendarDatePickerTextForegroundDisabled}" />
-          </Style>
-        </Style>
       </Style>
 
       <!-- Focused State -->
