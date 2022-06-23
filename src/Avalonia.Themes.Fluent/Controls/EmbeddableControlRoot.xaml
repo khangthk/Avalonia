@@ -1,7 +1,6 @@
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Styles.Resources>
-    <ControlTheme x:Key="FluentEmbeddableControlRoot" TargetType="EmbeddableControlRoot">
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme x:Key="{x:Type EmbeddableControlRoot}" TargetType="EmbeddableControlRoot">
       <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
       <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}"/>
       <Setter Property="Template">
@@ -20,9 +19,5 @@
         </ControlTemplate>
       </Setter>
     </ControlTheme>
-  </Styles.Resources>
 
-  <Style Selector="EmbeddableControlRoot">
-    <Setter Property="Theme" Value="{StaticResource FluentEmbeddableControlRoot}" />
-  </Style>
-</Styles>
+</ResourceDictionary>

@@ -1,21 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:CompileBindings="True">
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:CompileBindings="True">
   
-  <Design.PreviewWith>
+  <!--<Design.PreviewWith>
     <Border Padding="20">
       <StackPanel Spacing="20">
         <DropDownButton Content="Click Me!" />
         <DropDownButton Content="Disabled" IsEnabled="False" />
       </StackPanel>
     </Border>
-  </Design.PreviewWith>
+  </Design.PreviewWith>-->
   
-  <Styles.Resources>
     <x:Double x:Key="DropDownButtonMinHeight">32</x:Double>
     
-    <ControlTheme x:Key="FluentDropDownButton" TargetType="DropDownButton">
+    <ControlTheme x:Key="{x:Type DropDownButton}" TargetType="DropDownButton">
       <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
       <Setter Property="Foreground" Value="{DynamicResource ButtonForeground}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
@@ -58,6 +56,7 @@
                           Height="12" 
                           Width="12"
                           Margin="0,0,10,0"
+                          Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z"
                           HorizontalAlignment="Right"
                           VerticalAlignment="Center" />
               </Grid>
@@ -69,7 +68,6 @@
       <!--  Normal State  -->
       <Style Selector="^ /template/ PathIcon#DropDownGlyph">
         <Setter Property="Foreground" Value="{DynamicResource ComboBoxDropDownGlyphForeground}" />
-        <Setter Property="Data" Value="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
       </Style>
       
       <!--  PointerOver State  -->
@@ -100,9 +98,5 @@
         <Setter Property="RenderTransform" Value="scale(0.98)" />
       </Style>
     </ControlTheme>
-  </Styles.Resources>
   
-  <Style Selector="DropDownButton">
-    <Setter Property="Theme" Value="{StaticResource FluentDropDownButton}" />
-  </Style>
-</Styles>
+</ResourceDictionary>
