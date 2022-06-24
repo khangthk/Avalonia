@@ -94,8 +94,48 @@
         </Border>
       </ControlTemplate>
     </Setter>
+    <Style Selector="^[Tag=Expanded] /template/ Border#ExpandCollapseChevronBorder">
+      <Style.Animations>
+        <Animation FillMode="Both" Duration="0:0:0.0625">
+          <KeyFrame Cue="100%">
+            <Setter Property="RotateTransform.Angle" Value="180" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+    <Style Selector="^[Tag=NotExpanded] /template/ Border#ExpandCollapseChevronBorder">
+      <Style.Animations>
+        <Animation FillMode="Both" Duration="0:0:0.0625">
+          <KeyFrame Cue="0%">
+            <Setter Property="RotateTransform.Angle" Value="180" />
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="RotateTransform.Angle" Value="0" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
   </ControlTheme>
-  
+  <ControlTheme x:Key="FluentExpanderToggleButtonUpTheme" TargetType="ToggleButton" BasedOn="{StaticResource FluentExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Data" Value="M 0 7 L 7 0 L 14 7" />
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="FluentExpanderToggleButtonDownTheme" TargetType="ToggleButton" BasedOn="{StaticResource FluentExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Data" Value="M 0 0 L 7 7 L 14 0" />
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="FluentExpanderToggleButtonLeftTheme" TargetType="ToggleButton" BasedOn="{StaticResource FluentExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Data" Value="M 7 0 L 0 7 L 7 14" />
+    </Style>
+  </ControlTheme>
+  <ControlTheme x:Key="FluentExpanderToggleButtonRightTheme" TargetType="ToggleButton" BasedOn="{StaticResource FluentExpanderToggleButtonTheme}">
+    <Style Selector="^ /template/ Path#ExpandCollapseChevron">
+      <Setter Property="Data" Value="M 0 0 L 7 7 L 0 14" />
+    </Style>
+  </ControlTheme>
   <ControlTheme x:Key="{x:Type Expander}" TargetType="Expander">
     <Setter Property="Background" Value="{DynamicResource ExpanderBackground}" />
     <Setter Property="BorderThickness" Value="{DynamicResource ExpanderBorderThickness}" />
@@ -118,7 +158,6 @@
                         Content="{TemplateBinding Header}"
                         ContentTemplate="{TemplateBinding HeaderTemplate}"
                         IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
-                        Theme="{StaticResource FluentExpanderToggleButtonTheme}"
                         IsEnabled="{TemplateBinding IsEnabled}"/>
           <Border x:Name="ExpanderContent"
                   Padding="{DynamicResource ExpanderContentPadding}"
@@ -185,39 +224,24 @@
     </Style>
 
 
-    <Style Selector="^:expanded /template/ ToggleButton#ExpanderHeader /template/ Border#ExpandCollapseChevronBorder">
-      <Style.Animations>
-        <Animation FillMode="Both" Duration="0:0:0.0625">
-          <KeyFrame Cue="100%">
-            <Setter Property="RotateTransform.Angle" Value="180" />
-          </KeyFrame>
-        </Animation>
-      </Style.Animations>
+    <Style Selector="^:expanded /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Tag" Value="Expanded"/>
     </Style>
-    <Style Selector="^:not(:expanded) /template/ ToggleButton#ExpanderHeader /template/ Border#ExpandCollapseChevronBorder">
-      <Style.Animations>
-        <Animation FillMode="Both" Duration="0:0:0.0625">
-          <KeyFrame Cue="0%">
-            <Setter Property="RotateTransform.Angle" Value="180" />
-          </KeyFrame>
-          <KeyFrame Cue="100%">
-            <Setter Property="RotateTransform.Angle" Value="0" />
-          </KeyFrame>
-        </Animation>
-      </Style.Animations>
+    <Style Selector="^:not(:expanded) /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Tag" Value="NotExpanded"/>
     </Style>
 
-    <Style Selector="^:left /template/ ToggleButton#ExpanderHeader /template/ Path#ExpandCollapseChevron">
-      <Setter Property="Data" Value="M 7 0 L 0 7 L 7 14" />
+    <Style Selector="^:left /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource FluentExpanderToggleButtonLeftTheme}" />
     </Style>
-    <Style Selector="^:up /template/ ToggleButton#ExpanderHeader /template/ Path#ExpandCollapseChevron">
-      <Setter Property="Data" Value="M 0 7 L 7 0 L 14 7" />
+    <Style Selector="^:up /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource FluentExpanderToggleButtonUpTheme}" />
     </Style>
-    <Style Selector="^:right /template/ ToggleButton#ExpanderHeader /template/ Path#ExpandCollapseChevron">
-      <Setter Property="Data" Value="M 0 0 L 7 7 L 0 14" />
+    <Style Selector="^:right /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource FluentExpanderToggleButtonRightTheme}" />
     </Style>
-    <Style Selector="^:down /template/ ToggleButton#ExpanderHeader /template/ Path#ExpandCollapseChevron">
-      <Setter Property="Data" Value="M 0 0 L 7 7 L 14 0" />
+    <Style Selector="^:down /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource FluentExpanderToggleButtonDownTheme}" />
     </Style>
 
 
