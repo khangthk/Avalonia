@@ -8,10 +8,10 @@ using Avalonia.Threading;
 
 namespace Avalonia.LinuxFramebuffer;
 
-internal unsafe class EpollDispatcherImpl : IControlledDispatcherImpl
+internal unsafe class EpollDispatcherImpl : IControlledDispatcherImpl, IDispatcherImplWithExplicitBackgroundProcessing
 {
     private readonly ManagedDispatcherImpl.IManagedDispatcherInputProvider _inputProvider;
-    private Thread _mainThread;
+    private readonly Thread _mainThread;
 
     [StructLayout(LayoutKind.Explicit)]
     private struct epoll_data
@@ -88,6 +88,7 @@ internal unsafe class EpollDispatcherImpl : IControlledDispatcherImpl
     private TimeSpan? _nextTimer;
     private int _epoll;
     private Stopwatch _clock = Stopwatch.StartNew();
+    private bool _backgroundProcessingRequested;
 
     public EpollDispatcherImpl(ManagedDispatcherImpl.IManagedDispatcherInputProvider inputProvider)
     {
@@ -151,6 +152,19 @@ internal unsafe class EpollDispatcherImpl : IControlledDispatcherImpl
                 continue;
             }
 
+            bool triggerBackgroundProcessing;
+            lock (_lock)
+            {
+                triggerBackgroundProcessing = _backgroundProcessingRequested;
+                _backgroundProcessingRequested = false;
+            }
+
+            if (triggerBackgroundProcessing)
+            {
+                ReadyForBackgroundProcessing?.Invoke();
+                continue;
+            }
+
             epoll_event ev;
 
             if (_nextTimer != null)
@@ -161,6 +175,7 @@ internal unsafe class EpollDispatcherImpl : IControlledDispatcherImpl
 
                 itimerspec timer = new()
                 {
+                    it_interval = default,
                     it_value = new()
                     {
                         tv_sec = new IntPtr(Math.Min((int)waitFor.TotalSeconds, 100)),
@@ -219,8 +234,8 @@ internal unsafe class EpollDispatcherImpl : IControlledDispatcherImpl
 
     public bool CurrentThreadIsLoopThread => Thread.CurrentThread == _mainThread;
 
-    public event Action Signaled;
-    public event Action Timer;
+    public event Action? Signaled;
+    public event Action? Timer;
 
     public void UpdateTimer(long? dueTimeInMs)
     {
@@ -234,4 +249,20 @@ internal unsafe class EpollDispatcherImpl : IControlledDispatcherImpl
     public bool CanQueryPendingInput => true;
 
     public bool HasPendingInput => _inputProvider.HasInput;
+
+    private Action? ReadyForBackgroundProcessing { get; set; }
+    event Action? IDispatcherImplWithExplicitBackgroundProcessing.ReadyForBackgroundProcessing
+    {
+        add => ReadyForBackgroundProcessing += value;
+        remove => ReadyForBackgroundProcessing -= value;
+    }
+
+    void IDispatcherImplWithExplicitBackgroundProcessing.RequestBackgroundProcessing()
+    {
+        lock (_lock)
+        {
+            _backgroundProcessingRequested = true;
+            Wakeup();
+        }
+    }
 }

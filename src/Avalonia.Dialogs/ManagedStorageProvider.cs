@@ -27,23 +27,27 @@ internal class ManagedStorageProvider : BclStorageProvider
     public override bool CanSave => true;
     public override bool CanOpen => true;
     public override bool CanPickFolder => true;
-            
-    public override async Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(FilePickerOpenOptions options)
+
+    public override async Task<OpenFilePickerResult> OpenFilePickerWithResultAsync(FilePickerOpenOptions options)
     {
         var model = new ManagedFileChooserViewModel(options, _managedOptions);
         var results = await Show(model);
 
-        return results.Select(f => new BclStorageFile(new FileInfo(f))).ToArray();
+        var files = results.Select(f => new BclStorageFile(new FileInfo(f))).ToArray<IStorageFile>();
+        var fileType = TryGetSelectedFileType(options.FileTypeFilter, model.SelectedFilter);
+
+        return new OpenFilePickerResult { Files = files, SelectedFileType = fileType };
     }
 
-    public override async Task<IStorageFile?> SaveFilePickerAsync(FilePickerSaveOptions options)
+    public override async Task<SaveFilePickerResult> SaveFilePickerWithResultAsync(FilePickerSaveOptions options)
     {
         var model = new ManagedFileChooserViewModel(options, _managedOptions);
         var results = await Show(model);
 
-        return results.FirstOrDefault() is { } result
-            ? new BclStorageFile(new FileInfo(result))
-            : null;
+        var file = results.FirstOrDefault() is { } result ? new BclStorageFile(new FileInfo(result)) : null;
+        var fileType = TryGetSelectedFileType(options.FileTypeChoices, model.SelectedFilter);
+
+        return new SaveFilePickerResult { File = file, SelectedFileType = fileType };
     }
 
     public override async Task<IReadOnlyList<IStorageFolder>> OpenFolderPickerAsync(FolderPickerOpenOptions options)
@@ -75,7 +79,7 @@ internal class ManagedStorageProvider : BclStorageProvider
 
         return root;
     }
-    
+
     private Task<string[]> Show(ManagedFileChooserViewModel model)
     {
         var root = PrepareRoot(model);
@@ -116,6 +120,7 @@ internal class ManagedStorageProvider : BclStorageProvider
         {
             if (await ShowOverwritePrompt(filename, window))
             {
+                result = [filename];
                 window.Close();
             }
         };
@@ -135,7 +140,7 @@ internal class ManagedStorageProvider : BclStorageProvider
 
         return result;
     }
-    
+
     private async Task<string[]> ShowAsPopup(ContentControl root, ManagedFileChooserViewModel model)
     {
         var tcs = new TaskCompletionSource<bool>();
@@ -165,6 +170,7 @@ internal class ManagedStorageProvider : BclStorageProvider
         {
             if (await ShowOverwritePrompt(filename, root))
             {
+                result = [filename];
                 popup.Close();
             }
         };
@@ -221,4 +227,11 @@ internal class ManagedStorageProvider : BclStorageProvider
 
         return promptResult;
     }
+
+    private static FilePickerFileType? TryGetSelectedFileType(
+        IReadOnlyList<FilePickerFileType>? fileTypes,
+        ManagedFileChooserFilterViewModel? selectedFileType)
+        => fileTypes is not null && selectedFileType?.Index is { } index && index >= 0 && index < fileTypes.Count ?
+            fileTypes[index] :
+            null;
 }

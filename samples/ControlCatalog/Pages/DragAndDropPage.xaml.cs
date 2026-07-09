@@ -1,50 +1,65 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+
 using Avalonia.Platform.Storage;
 
 namespace ControlCatalog.Pages
 {
-    public class DragAndDropPage : UserControl
+    public partial class DragAndDropPage : ContentPage
     {
-        private readonly TextBlock _dropState;
-        private const string CustomFormat = "application/xxx-avalonia-controlcatalog-custom";
+        private readonly DataFormat<string> _customFormat =
+            DataFormat.CreateStringApplicationFormat("xxx-avalonia-controlcatalog-custom");
+
         public DragAndDropPage()
         {
             InitializeComponent();
-            _dropState = this.Get<TextBlock>("DropState");
 
             int textCount = 0;
 
             SetupDnd(
                 "Text",
-                d => d.Set(DataFormats.Text, $"Text was dragged {++textCount} times"),
+                d => d.Add(DataTransferItem.Create(DataFormat.Text, $"Text was dragged {++textCount} times")),
                 DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
 
             SetupDnd(
                 "Custom",
-                d => d.Set(CustomFormat, "Test123"),
-                DragDropEffects.Move);
+                d => d.Add(DataTransferItem.Create(_customFormat, "Test123")),
+                DragDropEffects.Copy | DragDropEffects.Move);
 
             SetupDnd(
                 "Files",
                 async d =>
                 {
-                    if (Assembly.GetEntryAssembly()?.GetModules().FirstOrDefault()?.FullyQualifiedName is { } name &&
+                    var currentFile = Environment.ProcessPath;
+
+                    if (File.Exists(currentFile) &&
                         TopLevel.GetTopLevel(this) is { } topLevel &&
-                        await topLevel.StorageProvider.TryGetFileFromPathAsync(name) is { } storageFile)
+                        await topLevel.StorageProvider.TryGetFileFromPathAsync(currentFile) is { } storageFile)
                     {
-                        d.Set(DataFormats.Files, new[] { storageFile });
+                        d.Add(DataTransferItem.Create(DataFormat.File, storageFile));
                     }
                 },
                 DragDropEffects.Copy);
+
+            SetupDnd(
+                "Bitmap",
+                d => d.Add(DataTransferItem.Create(DataFormat.Bitmap, new Bitmap(AssetLoader.Open(new Uri("avares://ControlCatalog/Assets/image1.jpg"))))),
+                DragDropEffects.Copy);
+
+            AddHandlers(CopyTarget, DragDropEffects.Copy);
+            AddHandlers(MoveTarget, DragDropEffects.Move);
         }
 
-        private void SetupDnd(string suffix, Action<DataObject> factory, DragDropEffects effects) =>
+        private void SetupDnd(string suffix, Action<DataTransfer> factory, DragDropEffects effects) =>
             SetupDnd(
                 suffix,
                 o =>
@@ -54,17 +69,17 @@ namespace ControlCatalog.Pages
                 },
                 effects);
 
-        private void SetupDnd(string suffix, Func<DataObject, Task> factory, DragDropEffects effects)
+        private void SetupDnd(string suffix, Func<DataTransfer, Task> factory, DragDropEffects effects)
         {
             var dragMe = this.Get<Border>("DragMe" + suffix);
             var dragState = this.Get<TextBlock>("DragState" + suffix);
 
             async void DoDrag(object? sender, PointerPressedEventArgs e)
             {
-                var dragData = new DataObject();
+                var dragData = new DataTransfer();
                 await factory(dragData);
 
-                var result = await DragDrop.DoDragDrop(e, dragData, effects);
+                var result = await DragDrop.DoDragDropAsync(e, dragData, effects);
                 switch (result)
                 {
                     case DragDropEffects.Move:
@@ -85,42 +100,41 @@ namespace ControlCatalog.Pages
                 }
             }
 
+            dragMe.PointerPressed += DoDrag;
+        }
+
+        private void AddHandlers(Control target, DragDropEffects allowedEffects)
+        {
+            DragDrop.AddDragEnterHandler(target, DragOver);
+            DragDrop.AddDragOverHandler(target, DragOver);
+            DragDrop.AddDropHandler(target, Drop);
+
             void DragOver(object? sender, DragEventArgs e)
             {
-                if (e.Source is Control c && c.Name == "MoveTarget")
-                {
-                    e.DragEffects = e.DragEffects & (DragDropEffects.Move);
-                }
-                else
-                {
-                    e.DragEffects = e.DragEffects & (DragDropEffects.Copy);
-                }
+                e.DragEffects &= allowedEffects;
 
                 // Only allow if the dragged data contains text or filenames.
-                if (!e.Data.Contains(DataFormats.Text)
-                    && !e.Data.Contains(DataFormats.Files)
-                    && !e.Data.Contains(CustomFormat))
+                if (!e.DataTransfer.Contains(DataFormat.Text)
+                    && !e.DataTransfer.Contains(DataFormat.File)
+                    && !e.DataTransfer.Contains(DataFormat.Bitmap)
+                    && !e.DataTransfer.Contains(_customFormat))
                     e.DragEffects = DragDropEffects.None;
             }
 
             async void Drop(object? sender, DragEventArgs e)
             {
-                if (e.Source is Control c && c.Name == "MoveTarget")
-                {
-                    e.DragEffects = e.DragEffects & (DragDropEffects.Move);
-                }
-                else
-                {
-                    e.DragEffects = e.DragEffects & (DragDropEffects.Copy);
-                }
+                e.DragEffects &= allowedEffects;
 
-                if (e.Data.Contains(DataFormats.Text))
+                if (e.DragEffects == DragDropEffects.None)
+                    return;
+
+                if (e.DataTransfer.Contains(DataFormat.Text))
                 {
-                    _dropState.Text = e.Data.GetText();
+                    DropState.Content = e.DataTransfer.TryGetText();
                 }
-                else if (e.Data.Contains(DataFormats.Files))
+                else if (e.DataTransfer.Contains(DataFormat.File))
                 {
-                    var files = e.Data.GetFiles() ?? Array.Empty<IStorageItem>();
+                    var files = e.DataTransfer.TryGetFiles() ?? [];
                     var contentStr = "";
 
                     foreach (var item in files)
@@ -140,31 +154,21 @@ namespace ControlCatalog.Pages
                             contentStr += $"Folder {item.Name}: items {childrenCount}{Environment.NewLine}{Environment.NewLine}";
                         }
                     }
-
-                    _dropState.Text = contentStr;
+                    DropState.Content = contentStr;
                 }
-#pragma warning disable CS0618 // Type or member is obsolete
-                else if (e.Data.Contains(DataFormats.FileNames))
+                else if (e.DataTransfer.Contains(DataFormat.Bitmap))
                 {
-                    var files = e.Data.GetFileNames();
-                    _dropState.Text = string.Join(Environment.NewLine, files ?? Array.Empty<string>());
+                    var bitmap = e.DataTransfer.TryGetValue(DataFormat.Bitmap);
+                    DropState.Content = new Image
+                    {
+                        Source = bitmap, Width = 400, Height = 300, Stretch = Stretch.Uniform
+                    };
                 }
-#pragma warning restore CS0618 // Type or member is obsolete
-                else if (e.Data.Contains(CustomFormat))
+                else if (e.DataTransfer.Contains(_customFormat))
                 {
-                    _dropState.Text = "Custom: " + e.Data.Get(CustomFormat);
+                    DropState.Content = "Custom: " + e.DataTransfer.TryGetValue(_customFormat);
                 }
             }
-
-            dragMe.PointerPressed += DoDrag;
-
-            AddHandler(DragDrop.DropEvent, Drop);
-            AddHandler(DragDrop.DragOverEvent, DragOver);
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }

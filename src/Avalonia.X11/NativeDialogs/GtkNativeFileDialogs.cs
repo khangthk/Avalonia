@@ -1,16 +1,13 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls.Platform;
 using Avalonia.Platform;
 using Avalonia.Platform.Interop;
 using Avalonia.Platform.Storage;
 using Avalonia.Platform.Storage.FileIO;
-using static Avalonia.X11.NativeDialogs.Glib;
+using static Avalonia.X11.Interop.Glib;
 using static Avalonia.X11.NativeDialogs.Gtk;
 
 namespace Avalonia.X11.NativeDialogs
@@ -38,14 +35,28 @@ namespace Avalonia.X11.NativeDialogs
             return await _initialized ? new GtkSystemDialog(window) : null;
         }
 
-        public override async Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(FilePickerOpenOptions options)
+        public override async Task<OpenFilePickerResult> OpenFilePickerWithResultAsync(FilePickerOpenOptions options)
         {
             return await await RunOnGlibThread(async () =>
             {
-                var res = await ShowDialog(options.Title, _window, GtkFileChooserAction.Open,
-                    options.AllowMultiple, options.SuggestedStartLocation, null, options.FileTypeFilter, null, false)
-                    .ConfigureAwait(false);
-                return res?.Select(f => new BclStorageFile(new FileInfo(f))).ToArray() ?? Array.Empty<IStorageFile>();
+                var (files, selectedFilter) = await ShowDialog(
+                    options.Title,
+                    _window,
+                    GtkFileChooserAction.Open,
+                    options.AllowMultiple,
+                    options.SuggestedStartLocation,
+                    null,
+                    options.SuggestedFileType,
+                    options.FileTypeFilter,
+                    null,
+                    false)
+                .ConfigureAwait(false);
+
+                var storageFiles =
+                    files?.Where(File.Exists).Select(f => new BclStorageFile(new FileInfo(f))).ToArray() ??
+                    Array.Empty<IStorageFile>();
+
+                return new OpenFilePickerResult { Files = storageFiles, SelectedFileType = selectedFilter };
             });
         }
 
@@ -53,28 +64,34 @@ namespace Avalonia.X11.NativeDialogs
         {
             return await await RunOnGlibThread(async () =>
             {
-                var res = await ShowDialog(options.Title, _window, GtkFileChooserAction.SelectFolder,
-                    options.AllowMultiple, options.SuggestedStartLocation, null,
-                    null, null, false).ConfigureAwait(false);
-                return res?.Select(f => new BclStorageFolder(new DirectoryInfo(f))).ToArray() ?? Array.Empty<IStorageFolder>();
-            });
-        }
-        
-        public override async Task<IStorageFile?> SaveFilePickerAsync(FilePickerSaveOptions options)
-        {
-            return await await RunOnGlibThread(async () =>
-            {
-                var res = await ShowDialog(options.Title, _window, GtkFileChooserAction.Save,
-                    false, options.SuggestedStartLocation, options.SuggestedFileName, options.FileTypeChoices, options.DefaultExtension, options.ShowOverwritePrompt ?? false)
+                var (folders, _) = await ShowDialog(options.Title, _window, GtkFileChooserAction.SelectFolder,
+                        options.AllowMultiple, options.SuggestedStartLocation, null,
+                        null, null, null, false)
                     .ConfigureAwait(false);
-                return res?.FirstOrDefault() is { } file
-                    ? new BclStorageFile(new FileInfo(file))
-                    : null;
+                return folders?.Select(f => new BclStorageFolder(new DirectoryInfo(f))).ToArray() ??
+                       Array.Empty<IStorageFolder>();
             });
         }
 
-        private unsafe Task<string[]?> ShowDialog(string? title, IWindowImpl parent, GtkFileChooserAction action,
-            bool multiSelect, IStorageFolder? initialFolder, string? initialFileName,
+        public override async Task<SaveFilePickerResult> SaveFilePickerWithResultAsync(FilePickerSaveOptions options)
+        {
+            return await await RunOnGlibThread(async () =>
+            {
+                var (files, selectedFilter) = await ShowDialog(options.Title, _window, GtkFileChooserAction.Save,
+                        false, options.SuggestedStartLocation, options.SuggestedFileName, options.SuggestedFileType, options.FileTypeChoices, 
+                        options.DefaultExtension, options.ShowOverwritePrompt ?? false)
+                    .ConfigureAwait(false);
+                var file = files?.FirstOrDefault() is { } path
+                    ? new BclStorageFile(new FileInfo(path))
+                    : null;
+
+                return new SaveFilePickerResult { File = file, SelectedFileType = selectedFilter };
+            });
+        }
+
+        private unsafe Task<(string[]? files, FilePickerFileType? selectedFilter)> ShowDialog(string? title,
+            IWindowImpl parent, GtkFileChooserAction action,
+            bool multiSelect, IStorageFolder? initialFolder, string? initialFileName, FilePickerFileType? suggestedFileType,
             IEnumerable<FilePickerFileType>? filters, string? defaultExtension, bool overwritePrompt)
         {
             IntPtr dlg;
@@ -90,12 +107,18 @@ namespace Avalonia.X11.NativeDialogs
             }
 
             gtk_window_set_modal(dlg, true);
-            var tcs = new TaskCompletionSource<string[]?>();
+            gtk_file_chooser_set_local_only(dlg, false);
+            var tcs = new TaskCompletionSource<(string[]?, FilePickerFileType?)>();
             List<IDisposable>? disposables = null;
 
             void Dispose()
             {
-                foreach (var d in disposables!)
+                if (disposables is null)
+                {
+                    return;
+                }
+
+                foreach (var d in disposables)
                 {
                     d.Dispose();
                 }
@@ -104,6 +127,7 @@ namespace Avalonia.X11.NativeDialogs
             }
 
             var filtersDic = new Dictionary<IntPtr, FilePickerFileType>();
+            FilePickerFileType? selectedFilter = null;
             if (filters != null)
             {
                 foreach (var f in filters)
@@ -140,15 +164,21 @@ namespace Avalonia.X11.NativeDialogs
                         }
 
                         gtk_file_chooser_add_filter(dlg, filter);
+
+                        if (suggestedFileType != null && suggestedFileType == f)
+                        {
+                            gtk_file_chooser_set_filter(dlg, filter);
+                        }
                     }
                 }
+
             }
 
             disposables = new List<IDisposable>
             {
                 ConnectSignal<signal_generic>(dlg, "close", delegate
                 {
-                    tcs.TrySetResult(null);
+                    tcs.TrySetResult((null, null));
                     Dispose();
                     return false;
                 }),
@@ -168,18 +198,23 @@ namespace Avalonia.X11.NativeDialogs
                         g_slist_free(gs);
                         result = resultList.ToArray();
 
+                        var currentFilter = gtk_file_chooser_get_filter(dlg);
+                        filtersDic.TryGetValue(currentFilter, out selectedFilter);
+
                         // GTK doesn't auto-append the extension, so we need to do that manually
                         if (action == GtkFileChooserAction.Save)
                         {
-                            var currentFilter = gtk_file_chooser_get_filter(dlg);
-                            filtersDic.TryGetValue(currentFilter, out var selectedFilter);
-                            for (var c = 0; c < result.Length; c++) { result[c] = StorageProviderHelpers.NameWithExtension(result[c], defaultExtension, selectedFilter); }
+                            for (var c = 0; c < result.Length; c++)
+                            {
+                                result[c] = StorageProviderHelpers.NameWithExtension(result[c], defaultExtension,
+                                    selectedFilter);
+                            }
                         }
                     }
 
                     gtk_widget_hide(dlg);
                     Dispose();
-                    tcs.TrySetResult(result);
+                    tcs.TrySetResult((result, selectedFilter));
                     return false;
                 })
             };

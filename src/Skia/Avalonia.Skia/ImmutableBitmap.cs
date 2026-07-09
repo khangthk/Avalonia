@@ -10,10 +10,11 @@ namespace Avalonia.Skia
     /// <summary>
     /// Immutable Skia bitmap.
     /// </summary>
-    internal class ImmutableBitmap : IDrawableBitmapImpl, IReadableBitmapWithAlphaImpl
+    internal class ImmutableBitmap : IDrawableBitmapImpl, IReadableBitmapImpl
     {
         private readonly SKImage _image;
         private readonly SKBitmap? _bitmap;
+        private readonly Action? _customImageDispose = null;
 
         /// <summary>
         /// Create immutable bitmap from given stream.
@@ -39,18 +40,20 @@ namespace Avalonia.Skia
             }
         }
 
-        public ImmutableBitmap(SKImage image)
+        public ImmutableBitmap(SKImage image, Action? customImageDispose = null)
         {
             _image = image;
+            _customImageDispose = customImageDispose;
             PixelSize = new PixelSize(image.Width, image.Height);
             Dpi = new Vector(96, 96);
         }
 
         public ImmutableBitmap(ImmutableBitmap src, PixelSize destinationSize, BitmapInterpolationMode interpolationMode)
         {
+            var isUpscaling = destinationSize.Width > src.PixelSize.Width || destinationSize.Height > src.PixelSize.Height;
             SKImageInfo info = new SKImageInfo(destinationSize.Width, destinationSize.Height, SKColorType.Bgra8888);
             _bitmap = new SKBitmap(info);
-            src._image.ScalePixels(_bitmap.PeekPixels(), interpolationMode.ToSKFilterQuality());
+            src._image.ScalePixels(_bitmap.PeekPixels(), interpolationMode.ToSKSamplingOptions(isUpscaling));
             _bitmap.SetImmutable();
             _image = SKImage.FromBitmap(_bitmap);
 
@@ -95,11 +98,12 @@ namespace Avalonia.Skia
 
                 if (_bitmap.Width != desired.Width || _bitmap.Height != desired.Height)
                 {
-                    var scaledBmp = _bitmap.Resize(desired, interpolationMode.ToSKFilterQuality());
+                    var isUpscaling = desired.Width > _bitmap.Width || desired.Height > _bitmap.Height;
+                    var scaledBmp = _bitmap.Resize(desired, interpolationMode.ToSKSamplingOptions(isUpscaling));
                     _bitmap.Dispose();
                     _bitmap = scaledBmp;
                 }
-                
+
                 _bitmap.SetImmutable();
 
                 _image = SKImage.FromBitmap(_bitmap);
@@ -127,18 +131,26 @@ namespace Avalonia.Skia
         /// <param name="data">Data pixels.</param>
         public ImmutableBitmap(PixelSize size, Vector dpi, int stride, PixelFormat format, AlphaFormat alphaFormat, IntPtr data)
         {
-            using (var tmp = new SKBitmap())
+            var info = new SKImageInfo(size.Width, size.Height, format.ToSkColorType(), alphaFormat.ToSkAlphaType());
+
+            _bitmap = new SKBitmap();
+            if (!_bitmap.TryAllocPixels(info))
             {
-                tmp.InstallPixels(
-                    new SKImageInfo(size.Width, size.Height, format.ToSkColorType(), alphaFormat.ToSkAlphaType()),
-                    data, stride);
-                _bitmap = tmp.Copy();
+                _bitmap.Dispose();
+                throw new ArgumentException("Unable to create bitmap from provided data");
             }
+
+            // Our CopyPixels is 6-15x  faster than SKBitmap.Copy(), which internally spins up an
+            // SKCanvas and draws the source bitmap by assigning it as a shader on an SKPaint
+            Bitmap.CopyPixelsCore(new PixelRect(size), data, stride, format, _bitmap.GetPixels(),
+                _bitmap.RowBytes * size.Height, _bitmap.RowBytes);
+
             _bitmap.SetImmutable();
             _image = SKImage.FromBitmap(_bitmap);
 
             if (_image == null)
             {
+                _bitmap.Dispose();
                 throw new ArgumentException("Unable to create bitmap from provided data");
             }
 
@@ -154,26 +166,22 @@ namespace Avalonia.Skia
         /// <inheritdoc />
         public void Dispose()
         {
-            _image.Dispose();
+            if (_customImageDispose != null)
+                _customImageDispose();
+            else
+                _image.Dispose();
             _bitmap?.Dispose();
         }
 
-        /// <inheritdoc />
-        public void Save(string fileName, int? quality = null)
+        public void Save(Stream stream, BitmapEncoderOptions options)
         {
-            ImageSavingHelper.SaveImage(_image, fileName, quality);
+            ImageSavingHelper.SaveImage(_image, stream, options);
         }
 
         /// <inheritdoc />
-        public void Save(Stream stream, int? quality = null)
+        public void Draw(DrawingContextImpl context, SKRect sourceRect, SKRect destRect, SKSamplingOptions samplingOptions, SKPaint paint)
         {
-            ImageSavingHelper.SaveImage(_image, stream, quality);
-        }
-
-        /// <inheritdoc />
-        public void Draw(DrawingContextImpl context, SKRect sourceRect, SKRect destRect, SKPaint paint)
-        {
-            context.Canvas.DrawImage(_image, sourceRect, destRect, paint);
+            context.Canvas.DrawImage(_image, sourceRect, destRect, samplingOptions, paint);
         }
 
         public PixelFormat? Format => _bitmap?.ColorType.ToAvalonia();
@@ -188,7 +196,9 @@ namespace Avalonia.Skia
             if (_bitmap.ColorType.ToAvalonia() is not { } format)
                 throw new NotSupportedException($"Unsupported format {_bitmap.ColorType}");
 
-            return new LockedFramebuffer(_bitmap.GetPixels(), PixelSize, _bitmap.RowBytes, Dpi, format, null);
+            var alphaFormat = _bitmap.AlphaType.ToAlphaFormat();
+
+            return new LockedFramebuffer(_bitmap.GetPixels(), PixelSize, _bitmap.RowBytes, Dpi, format, alphaFormat, null);
         }
     }
 }

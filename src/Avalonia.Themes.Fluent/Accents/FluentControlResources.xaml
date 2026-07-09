@@ -102,6 +102,15 @@
       <StaticResource x:Key="ToggleButtonBorderBrushIndeterminateDisabled"
                       ResourceKey="SystemControlDisabledTransparentBrush" />
 
+      <!--  GroupBox  -->
+      <Thickness x:Key="GroupBoxPadding">4</Thickness>
+      <x:Double x:Key="GroupBoxHeaderFontSize">16</x:Double>
+      <Thickness x:Key="GroupBoxHeaderMargin">0,4,0,12</Thickness>
+      <Thickness x:Key="GroupBoxBorderThickness">1</Thickness>
+      <SolidColorBrush x:Key="GroupBoxBackground" Color="Transparent" />
+      <StaticResource x:Key="GroupBoxBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+      <StaticResource x:Key="GroupBoxHeaderForeground" ResourceKey="SystemBaseHighColor" />
+
       <!-- Resources for HyperlinkButton.xaml -->
       <Color x:Key="HyperlinkVisitedColor">#FF681DA8</Color>
       <SolidColorBrush x:Key="HyperlinkVisitedBrush" Color="{StaticResource HyperlinkVisitedColor}" />
@@ -240,6 +249,7 @@
       <StaticResource x:Key="TextControlBackgroundDisabled" ResourceKey="SystemControlBackgroundBaseLowBrush" />
       <StaticResource x:Key="TextControlBorderBrushFocused" ResourceKey="SystemControlHighlightAccentBrush" />
       <StaticResource x:Key="TextControlBorderBrushDisabled" ResourceKey="SystemControlDisabledBaseLowBrush" />
+      <x:Double x:Key="TextControlPlaceholderOpacity">0.5</x:Double>
       <StaticResource x:Key="TextControlPlaceholderForeground" ResourceKey="SystemControlPageTextBaseMediumBrush" />
       <StaticResource x:Key="TextControlPlaceholderForegroundPointerOver"
                       ResourceKey="SystemControlPageTextBaseMediumBrush" />
@@ -807,14 +817,34 @@
       <SolidColorBrush x:Key="ScrollViewerScrollBarsSeparatorBackground"
                        Color="{StaticResource SystemChromeMediumColor}" Opacity="0.9" />
 
-      <!-- BaseResources for RefreshVisualizer.xaml -->
+      <!-- Resources for RefreshVisualizer.xaml -->
       <SolidColorBrush x:Key="RefreshVisualizerForeground" Color="Black" />
       <SolidColorBrush x:Key="RefreshVisualizerBackground" Color="Transparent" />
       
-      <!-- BaseResources for CaptionButtons.xaml -->
+      <!-- Resources for WindowDrawnDecorations.xaml -->
       <SolidColorBrush x:Key="CaptionButtonForeground" Color="Black" />
       <SolidColorBrush x:Key="CaptionButtonBackground" Color="#ffe5e5e5" />
       <SolidColorBrush x:Key="CaptionButtonBorderBrush" Color="#ffcacaca" />
+      <StaticResource x:Key="TitleBarBackgroundBrush" ResourceKey="SystemControlBackgroundAltHighBrush" />
+
+      <!-- Resources for TableViewColumnHeader.xaml -->
+      <StaticResource x:Key="TableViewColumnHeaderSeparatorBackground" ResourceKey="SystemBaseLowColor" />
+
+      <!-- Resources for TableViewRow.xaml -->
+      <SolidColorBrush x:Key="TableViewRowBackground">Transparent</SolidColorBrush>
+      <SolidColorBrush x:Key="TableViewRowBackgroundDisabled">Transparent</SolidColorBrush>
+      <StaticResource x:Key="TableViewRowForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
+      <StaticResource x:Key="TableViewRowForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+      <StaticResource x:Key="TableViewRowForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundSelected" ResourceKey="SystemControlHighlightListAccentLowBrush" />
+      <StaticResource x:Key="TableViewRowForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundSelectedPointerOver" ResourceKey="SystemControlHighlightListAccentMediumBrush" />
+      <StaticResource x:Key="TableViewRowForegroundSelectedPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundSelectedPressed" ResourceKey="SystemControlHighlightListAccentHighBrush" />
+      <StaticResource x:Key="TableViewRowForegroundSelectedPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <!-- Resources for Button.xaml -->
@@ -915,6 +945,15 @@
                       ResourceKey="SystemControlHighlightTransparentBrush" />
       <StaticResource x:Key="ToggleButtonBorderBrushIndeterminateDisabled"
                       ResourceKey="SystemControlDisabledTransparentBrush" />
+
+      <!--  GroupBox  -->
+      <Thickness x:Key="GroupBoxPadding">4</Thickness>
+      <x:Double x:Key="GroupBoxHeaderFontSize">16</x:Double>
+      <Thickness x:Key="GroupBoxHeaderMargin">0,4,0,12</Thickness>
+      <Thickness x:Key="GroupBoxBorderThickness">1</Thickness>
+      <SolidColorBrush x:Key="GroupBoxBackground" Color="Transparent" />
+      <StaticResource x:Key="GroupBoxBorderBrush" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+      <StaticResource x:Key="GroupBoxHeaderForeground" ResourceKey="SystemBaseHighColor" />
 
       <!-- Resources for HyperlinkButton.xaml -->
       <Color x:Key="HyperlinkVisitedColor">#FFC58AF9</Color>
@@ -1621,18 +1660,38 @@
       <StaticResource x:Key="FlyoutPresenterBackground" ResourceKey="SystemControlBackgroundChromeMediumLowBrush" />
       <StaticResource x:Key="FlyoutBorderThemeBrush" ResourceKey="SystemControlTransientBorderBrush" />
 
-      <!-- BaseResources for ScrollViewer.xaml -->
+      <!-- Resources for ScrollViewer.xaml -->
       <SolidColorBrush x:Key="ScrollViewerScrollBarsSeparatorBackground"
                        Color="{StaticResource SystemChromeMediumColor}" Opacity="0.9" />
 
-      <!-- BaseResources for RefreshVisualizer.xaml -->
+      <!-- Resources for RefreshVisualizer.xaml -->
       <SolidColorBrush x:Key="RefreshVisualizerForeground" Color="White" />
       <SolidColorBrush x:Key="RefreshVisualizerBackground" Color="Transparent" />
 
-      <!-- BaseResources for CaptionButtons.xaml -->
+      <!-- Resources for WindowDrawnDecorations.xaml -->
       <SolidColorBrush x:Key="CaptionButtonForeground" Color="White" />
-      <SolidColorBrush x:Key="CaptionButtonBackground" Color="#ffe5e5e5" />
+      <SolidColorBrush x:Key="CaptionButtonBackground" Color="#ff1d170f" />
       <SolidColorBrush x:Key="CaptionButtonBorderBrush" Color="#ffcacaca" />
+      <StaticResource x:Key="TitleBarBackgroundBrush" ResourceKey="SystemControlBackgroundAltHighBrush" />
+
+      <!-- Resources for TableViewColumnHeader.xaml -->
+      <StaticResource x:Key="TableViewColumnHeaderSeparatorBackground" ResourceKey="SystemBaseLowColor" />
+
+      <!-- Resources for TableViewRow.xaml -->
+      <SolidColorBrush x:Key="TableViewRowBackground">Transparent</SolidColorBrush>
+      <SolidColorBrush x:Key="TableViewRowBackgroundDisabled">Transparent</SolidColorBrush>
+      <StaticResource x:Key="TableViewRowForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
+      <StaticResource x:Key="TableViewRowForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+      <StaticResource x:Key="TableViewRowForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundSelected" ResourceKey="SystemControlHighlightListAccentLowBrush" />
+      <StaticResource x:Key="TableViewRowForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundSelectedPointerOver" ResourceKey="SystemControlHighlightListAccentMediumBrush" />
+      <StaticResource x:Key="TableViewRowForegroundSelectedPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+      <StaticResource x:Key="TableViewRowBackgroundSelectedPressed" ResourceKey="SystemControlHighlightListAccentHighBrush" />
+      <StaticResource x:Key="TableViewRowForegroundSelectedPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

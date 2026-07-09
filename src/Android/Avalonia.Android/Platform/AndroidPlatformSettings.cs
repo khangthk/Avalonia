@@ -2,6 +2,8 @@
 using Android.Content;
 using Android.Content.Res;
 using Android.Provider;
+using Android.Views;
+using Avalonia.Input;
 using Avalonia.Platform;
 using Color = Avalonia.Media.Color;
 
@@ -11,10 +13,18 @@ namespace Avalonia.Android.Platform;
 internal class AndroidPlatformSettings : DefaultPlatformSettings
 {
     private PlatformColorValues _latestValues;
+    private TimeSpan _holdWaitDuration = TimeSpan.FromMilliseconds(300);
+    private TimeSpan _doubleTapTime = TimeSpan.FromMilliseconds(500);
+    private Size _doubleTapSize = new Size(16,16);
+    private Size _tapSize = new Size(10,10);
 
     public AndroidPlatformSettings()
     {
         _latestValues = base.GetColorValues();
+        if (global::Android.App.Application.Context is { } context)
+        {
+            GetInputConfigValues(context);
+        }
     }
 
     public override PlatformColorValues GetColorValues()
@@ -22,14 +32,31 @@ internal class AndroidPlatformSettings : DefaultPlatformSettings
         return _latestValues;
     }
 
-    internal void OnViewConfigurationChanged(Context context)
+    public override TimeSpan GetDoubleTapTime(PointerType type)
     {
-        if (context.Resources?.Configuration is null)
+        return type == PointerType.Mouse ? base.GetDoubleTapTime(type) : _doubleTapTime;
+    }
+
+    public override Size GetDoubleTapSize(PointerType type)
+    {
+        return type == PointerType.Mouse ? base.GetDoubleTapSize(type) : _doubleTapSize;
+    }
+
+    public override Size GetTapSize(PointerType type)
+    {
+        return type == PointerType.Mouse ? base.GetTapSize(type) : _tapSize;
+    }
+
+    public override TimeSpan HoldWaitDuration => _holdWaitDuration;
+
+    internal void OnViewConfigurationChanged(Context context, Configuration configuration)
+    {
+        if (context.Resources is null)
         {
             return;
         }
 
-        var systemTheme = (context.Resources.Configuration.UiMode & UiMode.NightMask) switch
+        PlatformThemeVariant systemTheme = (configuration.UiMode & UiMode.NightMask) switch
         {
             UiMode.NightYes => PlatformThemeVariant.Dark,
             UiMode.NightNo => PlatformThemeVariant.Light,
@@ -71,7 +98,7 @@ internal class AndroidPlatformSettings : DefaultPlatformSettings
                 }
                 finally
                 {
-                    array.Recycle();   
+                    array.Recycle();
                 }
             }
         }
@@ -80,7 +107,28 @@ internal class AndroidPlatformSettings : DefaultPlatformSettings
             _latestValues = _latestValues with { ThemeVariant = systemTheme };
         }
 
+        GetInputConfigValues(context);
+
         OnColorValuesChanged(_latestValues);
+    }
+
+    private void GetInputConfigValues(Context context)
+    {
+        _holdWaitDuration = TimeSpan.FromMilliseconds(ViewConfiguration.LongPressTimeout);
+
+        if (OperatingSystem.IsAndroidVersionAtLeast(31))
+        {
+            _doubleTapTime = TimeSpan.FromMilliseconds(ViewConfiguration.MultiPressTimeout);
+        }
+        var config = ViewConfiguration.Get(context);
+        var scaling = context.Resources?.DisplayMetrics?.Density ?? 1;
+        if (config != null)
+        {
+            var size = config.ScaledDoubleTapSlop * 2 / scaling;
+            _doubleTapSize = new Size(size, size);
+            size = config.ScaledTouchSlop * 2 / scaling;
+            _tapSize = new Size(size, size);
+        }
     }
 
     private static ColorContrastPreference IsHighContrast(Context context)

@@ -1,24 +1,22 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using Avalonia.Reactive;
 using System.Runtime.InteropServices;
-using System.Threading;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Platform;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Rendering;
 using Avalonia.Rendering.Composition;
 using Avalonia.Threading;
 using Avalonia.Utilities;
 using Avalonia.Win32.Input;
-using Avalonia.Win32.Interop;
 using static Avalonia.Win32.Interop.UnmanagedMethods;
-using System.Collections.Generic;
 
 namespace Avalonia
 {
@@ -44,7 +42,7 @@ namespace Avalonia.Win32
         private static Win32PlatformOptions? s_options;
         private static Compositor? s_compositor;
         internal const int TIMERID_DISPATCHER = 1;
-
+        private const int DefaultFramesPerSecond = 60;
         private WndProc? _wndProcDelegate;
         private IntPtr _hwnd;
         private Win32DispatcherImpl _dispatcher;
@@ -85,16 +83,20 @@ namespace Avalonia.Win32
 
             SetDpiAwareness();
 
-            var renderTimer = options.ShouldRenderOnUIThread ? new UiThreadRenderTimer(60) : new DefaultRenderTimer(60);
+            Dispatcher.InitializeUIThreadDispatcher(s_instance._dispatcher);
+            
+            IRenderTimer renderTimer = options.ShouldRenderOnUIThread ? new UiThreadRenderTimer(DefaultFramesPerSecond) : new SleepLoopRenderTimer(DefaultFramesPerSecond);
+            var clipboardImpl = new ClipboardImpl();
+            var clipboard = new Clipboard(clipboardImpl);
 
             AvaloniaLocator.CurrentMutable
-                .Bind<IClipboard>().ToSingleton<ClipboardImpl>()
+                .Bind<IClipboardImpl>().ToConstant(clipboardImpl)
+                .Bind<IClipboard>().ToConstant(clipboard)
                 .Bind<ICursorFactory>().ToConstant(CursorFactory.Instance)
                 .Bind<IKeyboardDevice>().ToConstant(WindowsKeyboardDevice.Instance)
                 .Bind<IPlatformSettings>().ToSingleton<Win32PlatformSettings>()
                 .Bind<IScreenImpl>().ToSingleton<ScreenImpl>()
-                .Bind<IDispatcherImpl>().ToConstant(s_instance._dispatcher)
-                .Bind<IRenderTimer>().ToConstant(renderTimer)
+                .Bind<IRenderLoop>().ToConstant(RenderLoop.FromTimer(renderTimer))
                 .Bind<IWindowingPlatform>().ToConstant(s_instance)
                 .Bind<PlatformHotkeyConfiguration>().ToConstant(new PlatformHotkeyConfiguration(KeyModifiers.Control)
                 {
@@ -129,7 +131,9 @@ namespace Avalonia.Win32
             
             if (OleContext.Current != null)
                 AvaloniaLocator.CurrentMutable.Bind<IPlatformDragSource>().ToSingleton<DragSource>();
-            
+
+            UpdateTimerFps();
+
             s_compositor = new Compositor( platformGraphics);
             AvaloniaLocator.CurrentMutable.Bind<Compositor>().ToConstant(s_compositor);
         }
@@ -148,25 +152,44 @@ namespace Avalonia.Win32
             {
                 if (ShutdownRequested != null)
                 {
-                    var e = new ShutdownRequestedEventArgs();
+                    // https://learn.microsoft.com/en-us/windows/win32/shutdown/wm-queryendsession
+                    // > LPARAM lParam   // logoff option
+                    // >
+                    // > This parameter can be one or more of the following values. If this parameter is 0, the system is shutting down or restarting (it is not possible to determine which event is occurring).
+                    // >
+                    // > - ENDSESSION_CLOSEAPP 0x00000001 The application is using a file that must be replaced, the system is being serviced, or system resources are exhausted. For more information, see Guidelines for Applications.
+                    // > - ENDSESSION_CRITICAL 0x40000000 The application is forced to shut down.
+                    // > - ENDSESSION_LOGOFF 0x80000000 The user is logging off.
+                    var e = new ShutdownRequestedEventArgs()
+                    {
+                        IsOSShutdown = lParam == IntPtr.Zero,
+                    };
 
                     ShutdownRequested(this, e);
 
-                    if(e.Cancel)
+                    if (e.Cancel)
                     {
                         return IntPtr.Zero;
                     }
                 }
             }
 
-            if (msg == (uint)WindowsMessage.WM_SETTINGCHANGE 
-                && PlatformSettings is Win32PlatformSettings win32PlatformSettings)
+            if (msg == (uint)WindowsMessage.WM_SETTINGCHANGE)
             {
-                var changedSetting = Marshal.PtrToStringAuto(lParam);
-                if (changedSetting == "ImmersiveColorSet" // dark/light mode
-                    || changedSetting == "WindowsThemeElement") // high contrast mode
+                if (PlatformSettings is Win32PlatformSettings win32PlatformSettings)
                 {
-                    win32PlatformSettings.OnColorValuesChanged();   
+                    var changedSetting = Marshal.PtrToStringAuto(lParam);
+                    if (changedSetting == "ImmersiveColorSet" // dark/light mode
+                        || changedSetting == "WindowsThemeElement") // high contrast mode
+                    {
+                        win32PlatformSettings.OnColorValuesChanged();
+                    }
+                }
+
+                // Notify WorkingArea changed to Screens
+                if ((SystemParametersInfo)wParam == SystemParametersInfo.SPI_SETWORKAREA)
+                {
+                    Screen?.OnChanged();
                 }
             }
 
@@ -179,6 +202,16 @@ namespace Avalonia.Win32
             TrayIconImpl.ProcWnd(hWnd, msg, wParam, lParam);
 
             return DefWindowProc(hWnd, msg, wParam, lParam);
+        }
+
+        internal static void UpdateTimerFps()
+        {
+            var maxDisplayFrequency = Math.Max(60, Instance.Screen?.AllScreens?.Max(s => (s as WinScreen)?.Frequency) ?? 0);
+            if (AvaloniaLocator.Current.GetService<IRenderLoop>() is DefaultRenderLoop defaultRenderLoop &&
+                defaultRenderLoop.Timer is SleepLoopRenderTimer sleepLoopRenderTimer)
+            {
+                sleepLoopRenderTimer.DesiredFps = maxDisplayFrequency;
+            }
         }
 
         private void CreateMessageWindow()
@@ -207,6 +240,8 @@ namespace Avalonia.Win32
             {
                 throw new Win32Exception();
             }
+
+            TrayIconImpl.ChangeWindowMessageFilter(_hwnd);
         }
 
         public ITrayIconImpl CreateTrayIcon()
@@ -224,7 +259,7 @@ namespace Avalonia.Win32
         public IWindowImpl CreateEmbeddableWindow()
         {
             var embedded = new EmbeddedWindowImpl();
-            embedded.Show(true, false);
+            embedded.Show(false, false);
             return embedded;
         }
 
@@ -245,7 +280,7 @@ namespace Avalonia.Win32
         {
             using (var memoryStream = new MemoryStream())
             {
-                bitmap.Save(memoryStream);
+                bitmap.Save(memoryStream, PngBitmapEncoderOptions.Default);
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 return new IconImpl(memoryStream);
             }
@@ -306,6 +341,34 @@ namespace Avalonia.Win32
 
             if (dpiAwareness != Win32DpiAwareness.Unaware)
                 SetProcessDPIAware();
+        }
+
+        public void GetWindowsZOrder(ReadOnlySpan<IWindowImpl> windows, Span<long> zOrder)
+        {
+            var handlesToIndex = new Dictionary<IntPtr, int>(windows.Length);
+            var outputArray = new long[windows.Length];
+
+            for (int i = 0; i < windows.Length; i++)
+            {
+                if (windows[i] is WindowImpl platformImpl)
+                    handlesToIndex.Add(platformImpl.Handle.Handle, i);
+            }
+
+            long nextZOrder = 0;
+            bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam)
+            {
+                if (handlesToIndex.TryGetValue(hWnd, out var index))
+                {
+                    // We negate the z-order so that the topmost window has the highest number.
+                    outputArray[index] = -nextZOrder;
+                    nextZOrder++;
+                }
+                return nextZOrder < outputArray.Length;
+            }
+
+            EnumChildWindows(IntPtr.Zero, EnumWindowsProc, IntPtr.Zero);
+
+            outputArray.CopyTo(zOrder);
         }
     }
 }

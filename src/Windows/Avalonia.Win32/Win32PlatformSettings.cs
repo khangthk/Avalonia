@@ -10,16 +10,14 @@ internal class Win32PlatformSettings : DefaultPlatformSettings
 {
     private static readonly Lazy<bool> s_uiSettingsSupported = new(() =>
         WinRTApiInformation.IsTypePresent("Windows.UI.ViewManagement.UISettings")
-        && WinRTApiInformation.IsTypePresent("Windows.UI.ViewManagement.AccessibilitySettings")); 
-
-    private PlatformColorValues? _lastColorValues;
+        && WinRTApiInformation.IsTypePresent("Windows.UI.ViewManagement.AccessibilitySettings"));
 
     public override Size GetTapSize(PointerType type)
     {
         return type switch
         {
-            PointerType.Touch => new(10, 10),
-            _ => new(GetSystemMetrics(SystemMetric.SM_CXDRAG), GetSystemMetrics(SystemMetric.SM_CYDRAG)),
+            PointerType.Mouse => new(GetSystemMetrics(SystemMetric.SM_CXDRAG), GetSystemMetrics(SystemMetric.SM_CYDRAG)),
+            _ => base.GetTapSize(type)
         };
     }
 
@@ -27,8 +25,8 @@ internal class Win32PlatformSettings : DefaultPlatformSettings
     {
         return type switch
         {
-            PointerType.Touch => new(16, 16),
-            _ => new(GetSystemMetrics(SystemMetric.SM_CXDOUBLECLK), GetSystemMetrics(SystemMetric.SM_CYDOUBLECLK)),
+            PointerType.Mouse => new(GetSystemMetrics(SystemMetric.SM_CXDOUBLECLK), GetSystemMetrics(SystemMetric.SM_CYDOUBLECLK)),
+            _ => base.GetDoubleTapSize(type)
         };
     }
 
@@ -54,7 +52,7 @@ internal class Win32PlatformSettings : DefaultPlatformSettings
             // - Night sky - High Contrast #2
             // Only "Desert" one can be considered a "light" preference. 
             using var highContrastScheme = new HStringInterop(accessibilitySettings.HighContrastScheme);
-            return _lastColorValues = new PlatformColorValues
+            return new PlatformColorValues
             {
                 ThemeVariant = highContrastScheme.Value?.Contains("White") == true ?
                     PlatformThemeVariant.Light :
@@ -67,7 +65,7 @@ internal class Win32PlatformSettings : DefaultPlatformSettings
         else
         {
             var background = uiSettings.GetColorValue(UIColorType.Background).ToAvalonia();
-            return _lastColorValues = new PlatformColorValues
+            return new PlatformColorValues
             {
                 ThemeVariant = background.R + background.G + background.B < (255 * 3 - background.R - background.G - background.B) ?
                     PlatformThemeVariant.Dark :
@@ -80,12 +78,6 @@ internal class Win32PlatformSettings : DefaultPlatformSettings
     
     internal void OnColorValuesChanged()
     {
-        var oldColorValues = _lastColorValues;
-        var colorValues = GetColorValues();
-
-        if (oldColorValues != colorValues)
-        {
-            OnColorValuesChanged(colorValues);
-        }
+        OnColorValuesChanged(GetColorValues());
     }
 }

@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
@@ -16,14 +14,28 @@ internal sealed class StorageProviderImpl(TopLevelImpl topLevel, StorageProvider
 
     public bool CanPickFolder => true;
 
-    public Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(FilePickerOpenOptions options)
+    public async Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(FilePickerOpenOptions options)
     {
-        return native.OpenFileDialog(topLevel, options);
+        var result = await OpenFilePickerWithResultAsync(options).ConfigureAwait(false);
+        return result.Files;
     }
 
-    public Task<IStorageFile?> SaveFilePickerAsync(FilePickerSaveOptions options)
+    public async Task<OpenFilePickerResult> OpenFilePickerWithResultAsync(FilePickerOpenOptions options)
     {
-        return native.SaveFileDialog(topLevel, options);
+        var (files, selectedType) = await native.OpenFileDialog(topLevel, options).ConfigureAwait(false);
+        return new OpenFilePickerResult { Files = files, SelectedFileType = selectedType };
+    }
+
+    public async Task<IStorageFile?> SaveFilePickerAsync(FilePickerSaveOptions options)
+    {
+        var result = await SaveFilePickerWithResultAsync(options).ConfigureAwait(false);
+        return result.File;
+    }
+
+    public async Task<SaveFilePickerResult> SaveFilePickerWithResultAsync(FilePickerSaveOptions options)
+    {
+        var (file, selectedType) = await native.SaveFileDialog(topLevel, options).ConfigureAwait(false);
+        return new SaveFilePickerResult { File = file, SelectedFileType = selectedType };
     }
 
     public Task<IReadOnlyList<IStorageFolder>> OpenFolderPickerAsync(FolderPickerOpenOptions options)

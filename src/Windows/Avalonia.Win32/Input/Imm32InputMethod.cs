@@ -25,6 +25,7 @@ namespace Avalonia.Win32.Input
         private const int CaretMargin = 1;
 
         private bool _ignoreComposition;
+        private int? _compositionCursorPosition;
 
         public TextInputMethodClient? Client { get; private set; }
 
@@ -85,9 +86,6 @@ namespace Avalonia.Win32.Input
         {
             Hwnd = hwnd;
             _parent = parent;
-            _langId = PRIMARYLANGID(LGID(HKL));
-
-            _parent = parent;
 
             var langId = PRIMARYLANGID(LGID(HKL));
 
@@ -113,6 +111,7 @@ namespace Avalonia.Win32.Input
             _langId = 0;
 
             IsComposing = false;
+            _compositionCursorPosition = null;
         }
 
         //Dependant on CurrentThread. When Avalonia will support Multiple Dispatchers -
@@ -121,6 +120,8 @@ namespace Avalonia.Win32.Input
 
         public void Reset()
         {
+            _compositionCursorPosition = null;
+
             Dispatcher.UIThread.Post(() =>
             {
                 var himc = ImmGetContext(Hwnd);
@@ -144,6 +145,7 @@ namespace Avalonia.Win32.Input
                     IsComposing = false;
 
                     Composition = null;
+                    _compositionCursorPosition = null;
                 }
             });
         }
@@ -153,8 +155,9 @@ namespace Avalonia.Win32.Input
             if(Client != null)
             {
                 Composition = null;
+                _compositionCursorPosition = null;
 
-                Client.SetPreeditText(null);
+                Client.SetPreeditText(null, null);
             }
 
             Client = client;
@@ -211,27 +214,6 @@ namespace Avalonia.Win32.Input
             var s = _parent?.DesktopScaling ?? 1;
             var (x1, y1, x2, y2) = ((int) (p1.X * s), (int) (p1.Y * s), (int) (p2.X * s), (int) (p2.Y * s));
 
-            if (!ShowCompositionWindow && _langId == LANG_ZH)
-            {
-                // Chinese IMEs ignore function calls to ::ImmSetCandidateWindow()
-                // when a user disables TSF (Text Service Framework) and CUAS (Cicero
-                // Unaware Application Support).
-                // On the other hand, when a user enables TSF and CUAS, Chinese IMEs
-                // ignore the position of the current system caret and uses the
-                // parameters given to ::ImmSetCandidateWindow() with its 'dwStyle'
-                // parameter CFS_CANDIDATEPOS.
-                // Therefore, we do not only call ::ImmSetCandidateWindow() but also
-                // set the positions of the temporary system caret.
-                var candidateForm = new CANDIDATEFORM
-                {
-                    dwIndex = 0,
-                    dwStyle = CFS_CANDIDATEPOS,
-                    ptCurrentPos = new POINT {X = x2, Y = y2}
-                };
-
-                ImmSetCandidateWindow(himc, ref candidateForm);
-            }
-
             _caretManager.TryMove(x2, y2);
 
             if (ShowCompositionWindow)
@@ -250,14 +232,8 @@ namespace Avalonia.Win32.Input
                 y2 += CaretMargin;
             }
 
-            // Need to return here since some Chinese IMEs would stuck if set
-            // candidate window position with CFS_EXCLUDE style.
-            if (_langId == LANG_ZH)
-            {
-                return;
-            }
 
-            // Japanese IMEs and Korean IMEs also use the rectangle given to
+            // Chinese, Japanese, and Korean(CJK) IMEs also use the rectangle given to
             // ::ImmSetCandidateWindow() with its 'dwStyle' parameter CFS_EXCLUDE
             // to move their candidate windows when a user disables TSF and CUAS.
             // Therefore, we also set this parameter here.
@@ -296,16 +272,17 @@ namespace Avalonia.Win32.Input
             // we're skipping this. not usable on windows
         }
 
-        public void CompositionChanged(string? composition)
+        public void CompositionChanged(string? composition, int? cursorPosition)
         {
             Composition = composition;
+            _compositionCursorPosition = cursorPosition;
 
             if (!IsActive || !Client.SupportsPreedit)
             {
                 return;
             }
 
-            Client.SetPreeditText(composition);
+            Client.SetPreeditText(composition, cursorPosition);
         }
         
         public string? GetCompositionString(GCS flag)
@@ -320,13 +297,40 @@ namespace Avalonia.Win32.Input
             return ImmGetCompositionString(himc, flag);
         }
 
+        private int? GetCompositionCursorPosition()
+        {
+            if (!IsComposing)
+            {
+                return null;
+            }
+
+            var himc = ImmGetContext(Hwnd);
+
+            if (himc == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            try
+            {
+                var cursorPosition = ImmGetCompositionString(himc, GCS.GCS_CURSORPOS, IntPtr.Zero, 0);
+
+                return cursorPosition >= 0 ? cursorPosition : null;
+            }
+            finally
+            {
+                ImmReleaseContext(Hwnd, himc);
+            }
+        }
+
         public void HandleCompositionStart()
         {
             Composition = null;
+            _compositionCursorPosition = null;
 
             if (IsActive)
             {
-                Client.SetPreeditText(null);
+                Client.SetPreeditText(null, null);
 
                 if (Client.SupportsSurroundingText && Client.Selection.Start != Client.Selection.End)
                 {
@@ -355,10 +359,11 @@ namespace Avalonia.Win32.Input
             }
 
             Composition = null;
+            _compositionCursorPosition = null;
 
             if (IsActive)
             {
-                Client.SetPreeditText(null);
+                Client.SetPreeditText(null, null);
             }
         }
 
@@ -372,20 +377,27 @@ namespace Avalonia.Win32.Input
             }
 
             var flags = (GCS)ToInt32(lParam);
+            var resultChanged = (flags & GCS.GCS_RESULTSTR) != 0;
+            
+            if (flags == 0)
+            {
+                CompositionChanged("", null);
+            }
 
-            if ((flags & GCS.GCS_RESULTSTR) != 0)
+            if (resultChanged)
             {
                 var resultString = GetCompositionString(GCS.GCS_RESULTSTR);
 
+                Composition = null;
+                _compositionCursorPosition = null;
+
+                if (IsActive)
+                {
+                    Client.SetPreeditText(null, null);
+                }
+
                 if (_parent != null && !string.IsNullOrEmpty(resultString))
                 {
-                    Composition = null;
-
-                    if (IsActive)
-                    {
-                        Client.SetPreeditText(null);
-                    }
-
                     var e = new RawTextInputEventArgs(WindowsKeyboardDevice.Instance, timestamp, _parent.Owner, resultString);
 
                     if (_parent.Input != null)
@@ -397,11 +409,20 @@ namespace Avalonia.Win32.Input
                 }
             }
 
-            if ((flags & GCS.GCS_COMPSTR) != 0)
-            {
-                var compositionString = GetCompositionString(GCS.GCS_COMPSTR);
+            var compositionChanged = (flags & GCS.GCS_COMPSTR) != 0;
+            var cursorPositionChanged = (flags & GCS.GCS_CURSORPOS) != 0;
 
-                CompositionChanged(compositionString);
+            if (compositionChanged || (cursorPositionChanged && !resultChanged))
+            {
+                var compositionString = compositionChanged
+                    ? GetCompositionString(GCS.GCS_COMPSTR)
+                    : Composition;
+
+                var cursorPosition = cursorPositionChanged
+                    ? GetCompositionCursorPosition()
+                    : _compositionCursorPosition;
+
+                CompositionChanged(compositionString, cursorPosition);
             }
         }
 
